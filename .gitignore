@@ -1,0 +1,11 @@
+# Ignore environment files
+.env
+
+# Ignore Flask-related libraries
+venv/
+
+kioskvenv/
+
+uploads/*
+
+database.db

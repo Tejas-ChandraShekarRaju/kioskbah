@@ -1,0 +1,249 @@
+.clickable:hover {
+  cursor: pointer;
+}
+
+.select2-search__field {
+    border: none !important;
+    outline: none !important;
+}
+
+.select2-container .select2-selection--single {
+    height: 40px !important;
+}
+
+
+.select2-container .select2-selection--single .select2-selection__rendered {
+    padding: 4px 8px !important;
+}
+
+.select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+    background-color: #001489 !important;
+}
+
+.select2-container {
+    max-width: 100% !important;
+}
+
+.bg-indigo {
+    background: rgb(4,0,69);
+    background: linear-gradient(90deg, rgba(4,0,69,1) 0%, rgba(0,0,78,1) 35%, rgba(0,10,40,1) 100%);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar:hover {
+  cursor: pointer;
+
+}
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+html {
+    height: 100%;
+    font-size: 14px;
+}
+
+body, small {
+    font-family: 'Montserrat', sans-serif;
+    height: 100%;    
+    font-size: 12px;
+    font-weight: 500;
+
+}
+.table td, .table th {
+  vertical-align: middle;
+}
+
+.overflow-x-auto {
+    overflow-x: auto
+}
+
+.popover {
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.top-0 {
+    top: 0px;
+}
+
+.sidebar {
+    width: 250px;
+    top: 65px;
+    height: calc(100% - 65px);
+    overflow: auto;
+    padding-bottom: 100px !important;
+    transition: all .3s;
+    z-index: 100;
+
+}
+
+.sidebar {
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+}
+.sidebar::-webkit-scrollbar {
+    display: none;  /* Safari and Chrome */
+}
+
+.main-wrapper {
+    width: calc(100% - 250px);
+    left: 250px;
+    top: 67px;
+    height: calc(100% - 67px);
+    overflow-y: auto;
+    position: absolute;
+    background-color: #e4e4e4;
+}
+.flash-messages {
+  width: 30%;
+  right: 10px;
+  top: 70px;    
+  position: absolute;
+  z-index: 1;
+}
+.nav-link.active {
+    font-size: 14px;
+    font-weight: 500;
+    color: greenyellow !important
+}
+
+.nav-link.active ion-icon {
+  color: greenyellow !important
+}
+
+
+.nav-link {
+    display: flex;
+    color: white !important;
+    padding: 10px 6px !important;
+    transition: all .3s;
+    font-size: 12px;
+    width: fit-content;
+}
+
+.nav-link:hover {
+    font-weight: 600;
+}
+
+.nav-section-header {
+    color: white;
+    margin: 6px;
+    margin-top: 30px;
+    width: fit-content;
+    border-bottom: 1px solid white;
+    padding-bottom: 5px;
+    font-size: 12px;
+}
+
+@media only screen and (min-width: 992px) {
+  .mobile-menu-icon {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 992px) {
+  .mobile-menu-icon {
+    display: block;
+  }
+  .sidebar {
+    left: -250px;
+  }
+  .sidebar.active {
+    left: 0px;
+  }
+  .main-wrapper {
+    width: 100%;
+    left: 0px;
+    top: 70px;
+  }
+}
+
+.error {
+    color: red;
+    font-size: 12px;
+    
+}
+
+.border-radius-10 {
+    border-radius: 10px;
+}
+
+.fs-12 {
+    font-size: 12px;
+}
+
+.fs-16 {
+  font-size: 16px;
+}
+
+.fs-18 {
+    font-size: 18px;
+}
+
+.fs-60 {
+  font-size: 60px;
+}
+
+.fw-500 {
+  font-weight: 500;
+}
+
+.fw-100 {
+  font-weight: 100;
+}
+
+.text-indigo {
+  color: indigo;
+}
+
+ion-icon {
+  color: white;
+}
+.sidebar ion-icon {
+  font-size: 20px;
+  margin-right: 6px
+}
+
+.form-group {
+  box-shadow: 0px 0px 5px #dfdfdf;
+  padding: 12px;
+}
+
+.border-bottom.form-group {
+  box-shadow: none;
+  display: inline-block;
+  padding: 12px 0px !important;
+  border-bottom: 2px solid black !important;
+}
+
+.border-bottom.form-group .col-12 {
+  padding: 0px !important;
+}
+
+table {
+  background-color: #ffffff !important;
+}
+
+.profile-circle {
+  height: 40px;
+  width: 40px;
+  overflow: hidden;
+  border-radius: 50%;
+  margin-right: 15px;
+  display: inline-block;
+}

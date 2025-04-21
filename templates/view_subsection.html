@@ -1,0 +1,457 @@
+{% extends "base.html" %}
+
+{% block title %}{{ subsection.name }} - {{ section.name }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-teal mb-0 section-name ms-2 mt-3">{{ subsection.name }}</h1>
+        <a href="{{ url_for('sections.view_section_subsections', section_id=section.id) }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to {{ section.name }} Subsections
+        </a>
+    </div>
+
+    <div class="row">
+        <!-- Images Section -->
+        {% if media_by_type.image %}
+        <div id="images-section" class="col-12 mb-4">
+            <div class="row px-1">
+                {% for title, group in media_by_type.image|groupby('title') %}
+                <div class="col-md-4 mb-4 p-4">
+                    <div class="card h-100 bg-dark border-0 shadow-sm option-tab media-group-card"
+                        {# BS5 modal trigger uses data-bs-target #}
+                        data-bs-target="#mediaModal" data-title="{{ title|e }}"
+                        data-description="{{ group[0].description|e }}" data-type="image"
+                        data-paths='{{ group|map(attribute="file_path")|list|tojson|e }}'
+                        style="animation-delay: {{ loop.index0 * 0.1 }}s;">
+
+                        {# --- Start Carousel (BS5) --- #}
+                        {% set carousel_id = 'carouselImages' ~ loop.index0 %}
+                        {# Use data-bs-ride for auto-scroll, data-bs-interval for speed #}
+                        <div id="{{ carousel_id }}" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+                            {# Indicators (BS5: button, data-bs-target, data-bs-slide-to) #}
+                            <div class="carousel-indicators">
+                                {% for media_item in group %}
+                                <button type="button" data-bs-target="#{{ carousel_id }}" data-bs-slide-to="{{ loop.index0 }}" class="{{ 'active' if loop.first }}" aria-current="{{ 'true' if loop.first }}" aria-label="Slide {{ loop.index }}"></button>
+                                {% endfor %}
+                            </div>
+                            {# Inner Content #}
+                            <div class="carousel-inner">
+                                {% for media_item in group %}
+                                <div class="carousel-item {{ 'active' if loop.first }}">
+                                    <!-- <img src="{% if 'http' in media_item.file_path %}{{ media_item.file_path }}{% else %}{{ url_for('sections.upload_media', filename=media_item.file_path.replace('uploads/', '')) }}{% endif %}"
+                                         class="d-block w-100 carousel-img-top" alt="{{ title }} - Image {{ loop.index }}"> -->
+                                         <img src="/media/{{ media_item.file_path.split('/')[-1] }}"
+     class="d-block w-100 carousel-img-top" alt="{{ title }} - Image {{ loop.index }}">
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {# Controls (BS5: button, data-bs-target, data-bs-slide) #}
+                            <button class="carousel-control-prev" type="button" data-bs-target="#{{ carousel_id }}" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span> {# BS5 uses visually-hidden #}
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#{{ carousel_id }}" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span> {# BS5 uses visually-hidden #}
+                            </button>
+                        </div>
+                        {# --- End Carousel (BS5) --- #}
+
+                        <div class="card-body p-4">
+                            <h5 class="card-title text-teal">{{ title }}</h5>
+                            <p class="mb-0    description-text card-text">{{ group[0].description }}</p>
+                            {# BS5 modal trigger uses data-bs-toggle #}
+                            <span class="read-more-link text-teal mt-1" style="display: none;"
+                               >Read More</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Videos Section -->
+        {% if media_by_type.video %}
+        <div id="videos-section" class="col-12 mb-4">
+             <h3 class="text-light mb-3">Videos</h3>
+             <div class="row px-1">
+                {% for title, group in media_by_type.video|groupby('title') %}
+                <div class="col-md-4 mb-4 p-4">
+                    <div class="card h-100 bg-dark border-0 shadow-sm option-tab media-group-card"
+                        data-bs-target="#mediaModal" data-title="{{ title|e }}"
+                        data-description="{{ group[0].description|e }}" data-type="video"
+                        data-paths='{{ group|map(attribute="file_path")|list|tojson|e }}'
+                        style="animation-delay: {{ (loop.index0 + (media_by_type.image|length if media_by_type.image else 0)) * 0.1 }}s;">
+                        <video controls preload="metadata" class="card-img-top video-preview">
+                            <source src="{% if 'http' in group[0].file_path %}{{ group[0].file_path }}{% else %}{{ url_for('sections.upload_media', filename=group[0].file_path.replace('uploads/', '')) }}{% endif %}#t=0.5" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <div class="card-body p-4">
+                            <h5 class="card-title text-teal">{{ title }}</h5>
+                            <p class="mb-0   description-text card-text">{{ group[0].description }}</p>
+                            <span class="read-more-link text-teal mt-1" style="display: none;"
+                            >Read More</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- PDFs Section -->
+        {% if media_by_type.pdf %}
+        <div id="pdfs-section" class="col-12 mb-4">
+             <h3 class="text-light mb-3">Documents (PDF)</h3>
+             <div class="row px-1">
+                {% for title, group in media_by_type.pdf|groupby('title') %}
+                <div class="col-md-4 mb-4 p-4">
+                    <div class="card h-100 bg-dark border-0 shadow-sm option-tab media-group-card"
+                        data-bs-target="#mediaModal" data-title="{{ title|e }}"
+                        data-description="{{ group[0].description|e }}" data-type="pdf"
+                        data-paths='{{ group|map(attribute="file_path")|list|tojson|e }}'
+                        style="animation-delay: {{ (loop.index0 + (media_by_type.image|length if media_by_type.image else 0) + (media_by_type.video|length if media_by_type.video else 0)) * 0.1 }}s;">
+                        <div class="card-img-top pdf-placeholder d-flex align-items-center justify-content-center">
+                            <i class="fa-solid fa-file-pdf fa-3x text-danger"></i>
+                        </div>
+                        <div class="card-body p-4">
+                            <h5 class="card-title text-teal">{{ title }}</h5>
+                            <p class="mb-0    description-text card-text">{{ group[0].description }}</p>
+                             <a href="#" class="read-more-link text-teal mt-1" style="display: none;"
+                            >Read More</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Description Modal (BS5: data-bs-*) -->
+<div class="modal fade" id="descriptionModal" tabindex="-1" aria-labelledby="descriptionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title text-teal" id="descriptionModalLabel">Full Description</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modal-description-content">
+                Loading description...
+            </div>
+            <div class="modal-footer border-secondary">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Media Modal (BS5: data-bs-*) -->
+<div class="modal fade" id="mediaModal" tabindex="-1" aria-labelledby="mediaModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title text-teal" id="mediaModalLabel">Media Title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row" id="mediaModalGrid">
+                    <!-- Media items will be loaded here -->
+                </div>
+                <p id="mediaModalDescription" class="mb-3 mx-4 px-1 mt-4"></p>
+            </div>
+            <div class="modal-footer border-secondary">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+
+<style>
+    . {
+        color: rgb(112, 112, 112)
+    }
+    #mediaModalDescription {
+        margin-bottom: 1rem;
+        white-space: break-spaces;
+    }
+    .option-tab {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+        border-radius: 10px;
+        overflow: hidden; /* Ensure content respects border radius */
+        opacity: 0; /* Start hidden for animation */
+        animation: fadeInUp 0.5s ease forwards;
+    }
+
+    .option-tab:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 169, 165, 0.2);
+    }
+
+    .card {
+        color: grey;
+    }
+
+    .card-title {
+        color: var(--accent-primary);
+    }
+
+    /* Image and video styling */
+    .card-img-top, .carousel-img-top, .video-preview, .pdf-placeholder {
+        height: 200px;
+        object-fit: cover;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        background-color: #333; /* Placeholder bg */
+    }
+    .pdf-placeholder {
+        object-fit: contain; /* Don't stretch PDF icon */
+    }
+
+    /* Carousel styling */
+    .carousel-img-top {
+        border-radius: 0; /* Remove radius from image itself if inside carousel */
+    }
+    .carousel {
+        border-top-left-radius: 10px; /* Apply radius to carousel */
+        border-top-right-radius: 10px;
+        overflow: hidden; /* Clip carousel items */
+        background-color: transparent; /* Ensure card bg shows */
+    }
+    .carousel-indicators button {
+        background-color: rgba(0, 169, 165, 0.5);
+    }
+    .carousel-indicators .active {
+        background-color: var(--teal);
+    }
+
+    /* Section headings */
+    #images-section h3, #videos-section h3, #pdfs-section h3 {
+        border-bottom: 2px solid var(--teal);
+        padding-bottom: 0.5rem;
+        display: inline-block;
+    }
+
+    /* Description text truncation */
+    .description-text {
+        display: -webkit-box;
+        -webkit-line-clamp: 2; /* Limit to 2 lines */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-height: 3.6em; /* Approx 2 lines height (adjust based on font-size/line-height) */
+        line-height: 1.8em; /* Adjust line height */
+        color: rgb(177, 177, 177);
+    }
+
+    /* Read more link */
+    .read-more-link {
+        font-size: 0.9em;
+        text-decoration: none;
+        color: var(--accent-primary);
+    }
+
+    /* Modal grid item */
+    .media-modal-item img,
+    .media-modal-item video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        width: 100%;
+        height: 100%;
+    }
+    .pdf-preview {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        background-color: #444;
+        border-radius: 5px;
+        height: 150px; /* Give PDF preview some height */
+    }
+    .pdf-preview i {
+        font-size: 3rem;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Fade-in animation */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+</style>
+
+{% block scripts %}
+{{ super() }}
+<script>
+    // Use DOMContentLoaded for vanilla JS
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // Check all description texts for overflow
+        const descriptionElements = document.querySelectorAll('.description-text');
+        descriptionElements.forEach(element => {
+            const cardBody = element.closest('.card-body');
+            if (cardBody) {
+                const readMoreLink = cardBody.querySelector('.read-more-link');
+                if (readMoreLink) {
+                    // Check if content actually overflows the container
+                    if (element.scrollHeight > element.clientHeight) {
+                         readMoreLink.style.display = 'inline'; // Show the link
+                    }
+                }
+            }
+        });
+
+        // Handle description modal (BS5 vanilla JS events)
+        const descriptionModal = document.getElementById('descriptionModal');
+        if (descriptionModal) {
+            descriptionModal.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget; // Button that triggered the modal
+                const title = button.getAttribute('data-title');
+                const description = button.getAttribute('data-description');
+                const modalTitle = descriptionModal.querySelector('.modal-title');
+                const modalBody = descriptionModal.querySelector('.modal-body');
+
+                modalTitle.textContent = title;
+                modalBody.textContent = description;
+            });
+        }
+
+
+        // Make media cards clickable (Vanilla JS)
+        const mediaCards = document.querySelectorAll('.media-group-card');
+        const mediaModalElement = document.getElementById('mediaModal');
+        const mediaModal = mediaModalElement ? new bootstrap.Modal(mediaModalElement) : null; // Initialize modal instance once
+
+        mediaCards.forEach(card => {
+            card.addEventListener('click', function (e) {
+                // Don't trigger modal if clicking on specific interactive elements within the card
+                if (e.target.closest('a, button.carousel-control-prev, button.carousel-control-next, .carousel-indicators button, video')) {
+                    // console.log('Clicked on a control, stopping modal.');
+                    return; // Stop if the click was on a link, carousel control, indicator, or video element
+                }
+
+                if (!mediaModal) {
+                    console.error("Media modal instance not found");
+                    return;
+                }
+
+                // Proceed to open the modal
+                try {
+                    const title = this.getAttribute('data-title');
+                    const description = this.getAttribute('data-description');
+                    const type = this.getAttribute('data-type');
+                    const pathsJson = this.getAttribute('data-paths');
+                    let paths = [];
+
+                    try {
+                        paths = JSON.parse(pathsJson || '[]');
+                    } catch (jsonError) {
+                        console.error('JSON parsing error:', jsonError);
+                        paths = [];
+                    }
+
+                    if (!paths || !Array.isArray(paths)) {
+                        console.error('Invalid paths data:', paths);
+                        paths = [];
+                    }
+
+                    // Get modal elements
+                    const modalTitle = mediaModalElement.querySelector('#mediaModalLabel');
+                    const modalDescription = mediaModalElement.querySelector('#mediaModalDescription');
+                    const modalGrid = mediaModalElement.querySelector('#mediaModalGrid');
+
+                    modalGrid.classList.add('mx-3', 'mt-3'); // Add classes if needed
+                    modalTitle.textContent = title;
+                    modalDescription.textContent = description;
+                    modalGrid.innerHTML = ''; // Clear previous content
+
+                    // Add media items to grid
+                    paths.forEach(path => {
+                        const col = document.createElement('div');
+                        col.className = 'col-md-4 p-3 media-modal-item pb-0 mb-0'; // Use BS5 grid classes
+
+                        let content = '';
+                        // Ensure path is correctly formatted for URL generation if needed
+                        //const displayPath = path.startsWith('http') ? path : `{{ url_for('sections.upload_media', filename='') }}${path.replace('uploads/', '')}`;
+                        const displayPath = `/media/${path.split('/').pop()}`;
+                        if (type === 'image') {
+                            content = `<img src="${displayPath}" alt="${title}" class="img-fluid">`;
+                        } else if (type === 'video') {
+                            content = `
+                            <video controls class="w-100">
+                                <source src="${displayPath}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>`;
+                        } else if (type === 'pdf') {
+                             // For PDFs in modal, link directly
+                             const pdfLinkPath = path.startsWith('http') ? path : `{{ url_for('sections.upload_media', filename='') }}${path.replace('uploads/', '')}`;
+                             content = `
+                            <a href="${pdfLinkPath}" target="_blank" class="text-decoration-none">
+                                <div class="pdf-preview">
+                                    <i class="fa-solid fa-file-pdf text-danger"></i>
+                                    <span class="text-white">View PDF</span>
+                                </div>
+                            </a>`;
+                        }
+
+                        col.innerHTML = content;
+                        modalGrid.appendChild(col);
+                    });
+
+                    // Show modal using the initialized instance
+                    mediaModal.show();
+                } catch (error) {
+                    console.error('Error opening modal:', error);
+                }
+            });
+        });
+
+        // Handle modal cleanup (BS5 event)
+        if (mediaModalElement) {
+            mediaModalElement.addEventListener('hidden.bs.modal', function () {
+                // Pause all videos when modal is closed
+                const videos = this.querySelectorAll('video');
+                videos.forEach(video => {
+                    if (!video.paused) {
+                        video.pause();
+                    }
+                });
+            });
+        }
+
+        // --- Explicitly initialize all carousels on the page (BS5) ---
+        const carouselElements = document.querySelectorAll('.carousel');
+        carouselElements.forEach(carouselElement => {
+            try {
+                // Create a new instance if one doesn't exist
+                 if (!bootstrap.Carousel.getInstance(carouselElement)) {
+                    new bootstrap.Carousel(carouselElement);
+                 }
+                // console.log('Initialized carousel:', carouselElement.id);
+            } catch (error) {
+                console.error("Error initializing carousel:", carouselElement, error);
+            }
+        });
+        // --- End Carousel Initialization ---
+
+    }); // End of DOMContentLoaded listener
+</script>
+{% endblock %}
+
+{% endblock %}

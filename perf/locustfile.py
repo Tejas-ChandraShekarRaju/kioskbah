@@ -5,4 +5,4 @@ class FloorPlanUser(HttpUser):
 
     @task
     def show_featured_plans(self):
-        self.client.get("/check_floor_plan_and_elevation?view=featured")
+        self.client.get("/uploads/el_2_1743749885_DSC_2562.JPG")

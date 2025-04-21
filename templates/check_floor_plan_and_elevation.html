@@ -28,7 +28,7 @@
         integrity="sha512-5A8nwdMOWrSz20fDsjczgUidUBR8liPYU+WymTZP1lmY9G6Oc7HlZv156XqnsgNUzTyMefFTcsFH/tnJE/+xBg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
 
-        <script src="https://code.jquery.com/jquery-3.6.0.js"
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
         integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js "
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q "
@@ -46,18 +46,25 @@
     <!-- Add custom styles directly in head for simplicity, or link to a new CSS file -->
     <style>
         :root {
-            --dark-bg: #1a1a1a; /* Dark background */
-            --text-light: #f0f0f0; /* Light text */
+            --dark-bg: #1a1a1a;
+            /* Dark background */
+            --text-light: #f0f0f0;
+            /* Light text */
             /* Removed Previous Teal Variables */
             /* --accent-teal-start: #00e0c6; */
             /* --accent-teal-end: #00a896; */
             /* New Darker Teal Variables */
-            --accent-teal-start: #00A9A5; /* Darker Teal Start */
-            --accent-teal-end: #007A76;   /* Darkest Teal End */
-            --accent-primary: var(--accent-teal-start); /* Primary solid dark teal */
-            --card-bg: #2c2c2c; /* Darker card background */
+            --accent-teal-start: #00A9A5;
+            /* Darker Teal Start */
+            --accent-teal-end: #007A76;
+            /* Darkest Teal End */
+            --accent-primary: var(--accent-teal-start);
+            /* Primary solid dark teal */
+            --card-bg: #2c2c2c;
+            /* Darker card background */
             --border-color: #444;
-            --sidebar-width: 260px; /* <<< Ensure this variable is defined */
+            --sidebar-width: 260px;
+            /* <<< Ensure this variable is defined */
         }
 
         /* SVG Noise Filter Definition */
@@ -67,56 +74,70 @@
         /* Base64 encoded SVG for cross-browser compatibility */
         /* You can generate different noise patterns here: https://www.svgbackgrounds.com/ */
         /* This is a simple turbulence filter */
-       
+
 
         body {
             /* Keep the base gradient for fallback and color */
             background: linear-gradient(to bottom, #313131, #080808);
-            min-height: 100vh; /* Ensure gradient covers full height */
+            min-height: 100vh;
+            /* Ensure gradient covers full height */
             color: var(--text-light);
             font-family: 'Montserrat', sans-serif;
-            font-weight: 300; /* Set base font weight to Light */
-            transition: background-color 0.5s ease; /* Transition might not be very noticeable now */
-            overflow-x: hidden; /* Prevent horizontal scroll */
+            font-weight: 300;
+            /* Set base font weight to Light */
+            transition: background-color 0.5s ease;
+            /* Transition might not be very noticeable now */
+            overflow-x: hidden;
+            /* Prevent horizontal scroll */
         }
 
         /* --- General Button Styles --- */
         .btn {
-            border-radius: 25px; /* Rounded buttons */
+            border-radius: 25px;
+            /* Rounded buttons */
             transition: all 0.3s ease;
-            font-weight: 500; /* Keep buttons slightly bolder than base text (was 600) */
+            font-weight: 500;
+            /* Keep buttons slightly bolder than base text (was 600) */
             letter-spacing: 0.5px;
         }
 
         .btn-teal {
             background: linear-gradient(45deg, var(--accent-teal-start), var(--accent-teal-end));
-            color: var(--dark-bg); /* Changed to dark background text */
+            color: var(--dark-bg);
+            /* Changed to dark background text */
             border: none;
             /* Adjust shadow color to match darker teal */
             box-shadow: 0 4px 10px rgba(0, 169, 165, 0.3);
         }
 
         .btn-teal:hover {
-            color: var(--dark-bg); /* Keep dark background text on hover */
+            color: var(--dark-bg);
+            /* Keep dark background text on hover */
             transform: translateY(-2px);
             box-shadow: 0 6px 15px rgba(0, 169, 165, 0.5);
         }
 
         .btn-outline-teal {
-            color: var(--accent-primary); /* Uses new darker teal */
-            border: 2px solid var(--accent-primary); /* Uses new darker teal */
+            color: var(--accent-primary);
+            /* Uses new darker teal */
+            border: 2px solid var(--accent-primary);
+            /* Uses new darker teal */
             background-color: transparent;
         }
 
         .btn-outline-teal:hover {
-            background-color: var(--accent-primary); /* Uses new darker teal */
-            color: var(--dark-bg); /* Changed to dark background text */
-            box-shadow: 0 4px 10px rgba(0, 169, 165, 0.3); /* Uses new darker teal */
+            background-color: var(--accent-primary);
+            /* Uses new darker teal */
+            color: var(--dark-bg);
+            /* Changed to dark background text */
+            box-shadow: 0 4px 10px rgba(0, 169, 165, 0.3);
+            /* Uses new darker teal */
         }
 
         /* --- Welcome Screen --- */
         #welcomeScreen {
-            min-height: 80vh; /* Take more vertical space */
+            min-height: 80vh;
+            /* Take more vertical space */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -133,62 +154,83 @@
         /* --- Navigation Options --- */
         #navigationOptions {
             opacity: 0;
-            animation: fadeIn 0.8s ease-out forwards; /* Removed 0.2s delay */
+            animation: fadeIn 0.8s ease-out forwards;
+            /* Removed 0.2s delay */
         }
 
         #navigationOptions h3 {
             color: var(--accent-primary);
             margin-bottom: 3rem;
-            font-weight: 400; /* Reduced from 500 */
+            font-weight: 400;
+            /* Reduced from 500 */
         }
 
         .option-tab button {
-            padding: 100px 15px !important; /* Adjusted padding */
-            font-size: 1.4rem !important; /* Adjust font size */
-            font-weight: 100; /* Reduced button font weight from 500 */
-            height: 150px; /* Fixed height */
+            padding: 100px 15px !important;
+            /* Adjusted padding */
+            font-size: 1.4rem !important;
+            /* Adjust font size */
+            font-weight: 100;
+            /* Reduced button font weight from 500 */
+            height: 150px;
+            /* Fixed height */
             display: flex;
-            flex-direction: column; /* Stack icon and text vertically */
+            flex-direction: column;
+            /* Stack icon and text vertically */
             align-items: center;
             justify-content: center;
             text-align: center;
             margin-bottom: 20px;
-            gap: 10px; /* Add space between icon and text */
+            gap: 10px;
+            /* Add space between icon and text */
             /* --- Style Overrides for Modern Look --- */
-            border: none !important; /* Remove border */
-            color: var(--text-light) !important; /* Set text color to white */
-            background-color: rgba(255, 255, 255, 0.05) !important; /* Subtle background */
-            transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+            border: none !important;
+            /* Remove border */
+            color: var(--text-light) !important;
+            /* Set text color to white */
+            background-color: rgba(255, 255, 255, 0.05) !important;
+            /* Subtle background */
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            /* Smooth transitions */
         }
 
         .option-tab button:hover {
-            background-color: rgba(0, 169, 165, 0.2) !important; /* Use darker accent teal with alpha */
-            color: var(--text-light) !important; /* Keep text white on hover */
-            box-shadow: none !important; /* Remove hover shadow */
-            transform: translateY(-3px); /* Slight lift on hover */
+            background-color: rgba(0, 169, 165, 0.2) !important;
+            /* Use darker accent teal with alpha */
+            color: var(--text-light) !important;
+            /* Keep text white on hover */
+            box-shadow: none !important;
+            /* Remove hover shadow */
+            transform: translateY(-3px);
+            /* Slight lift on hover */
         }
 
         /* Remove focus outline (flicker) */
         .option-tab button:focus {
             outline: none !important;
-            box-shadow: none !important; /* Ensure no shadow on focus either */
+            box-shadow: none !important;
+            /* Ensure no shadow on focus either */
         }
 
         /* --- Featured Plans Options --- */
         #featuredPlansOptions {
-             opacity: 0;
-            animation: fadeIn 0.8s ease-out forwards; /* Removed 0.2s delay */
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out forwards;
+            /* Removed 0.2s delay */
         }
-         #featuredPlansOptions h4 {
+
+        #featuredPlansOptions h4 {
             color: var(--accent-primary);
             margin-bottom: 2rem;
-            font-weight: 400; /* Reduced from 500 */
-         }
+            font-weight: 400;
+            /* Reduced from 500 */
+        }
 
         /* --- Form --- */
         #siteForm {
             opacity: 0;
-            animation: fadeIn 0.8s ease-out forwards; /* Removed 0.2s delay */
+            animation: fadeIn 0.8s ease-out forwards;
+            /* Removed 0.2s delay */
         }
 
         #siteForm .card {
@@ -199,7 +241,8 @@
 
         #siteForm .card-title {
             color: var(--accent-primary);
-            font-weight: 400; /* Reduced from 500 */
+            font-weight: 400;
+            /* Reduced from 500 */
         }
 
         #siteForm .form-group {
@@ -208,35 +251,43 @@
 
         #siteForm label {
             color: var(--text-light);
-            font-weight: 300; /* Reduced from 400 (matches body) */
+            font-weight: 300;
+            /* Reduced from 400 (matches body) */
         }
 
         #siteForm .form-control,
         #siteForm .select2-container--default .select2-selection--single {
-            background-color: var(--dark-bg); /* Darker input background */
+            background-color: var(--dark-bg);
+            /* Darker input background */
             color: var(--text-light);
             border: 1px solid var(--border-color);
             border-radius: 5px;
         }
+
         #siteForm .select2-container--default .select2-selection--single .select2-selection__rendered {
-             color: var(--text-light);
+            color: var(--text-light);
         }
+
         #siteForm .select2-container--default .select2-selection--single .select2-selection__arrow b {
             border-color: var(--text-light) transparent transparent transparent;
         }
+
         /* Style Select2 dropdown */
         .select2-dropdown {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
             color: var(--text-light);
         }
+
         .select2-results__option {
             color: var(--text-light);
         }
+
         .select2-results__option--highlighted {
             background-color: var(--accent-primary) !important;
             color: var(--dark-bg) !important;
         }
+
         .select2-search__field {
             background-color: var(--dark-bg) !important;
             color: var(--text-light) !important;
@@ -246,7 +297,8 @@
 
         /* --- Results Area --- */
         .back-button a {
-            margin-bottom: 20px; /* Add space below back button */
+            margin-bottom: 20px;
+            /* Add space below back button */
         }
 
         .results-header-card {
@@ -256,7 +308,7 @@
             border-radius: 8px;
             border-top: 4px solid transparent;
             background-image: linear-gradient(var(--card-bg), var(--card-bg)),
-                              linear-gradient(90deg, var(--accent-teal-start), var(--accent-teal-end));
+                linear-gradient(90deg, var(--accent-teal-start), var(--accent-teal-end));
             background-origin: border-box;
             background-clip: padding-box, border-box;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
@@ -265,38 +317,52 @@
             flex-wrap: wrap;
             gap: 10px;
         }
+
         .results-header-card p {
-            margin-bottom: 0 !important; /* Remove paragraph margin */
-            display: flex; /* Align icon and text */
+            margin-bottom: 0 !important;
+            /* Remove paragraph margin */
+            display: flex;
+            /* Align icon and text */
             align-items: center;
-            font-weight: 300; /* Reduced from 400 (matches body) */
-            /* Optional: color: var(--accent-primary); */ /* Make text teal if desired */
+            font-weight: 300;
+            /* Reduced from 400 (matches body) */
+            /* Optional: color: var(--accent-primary); */
+            /* Make text teal if desired */
         }
+
         .results-header-card p i {
             color: var(--accent-primary);
             font-size: 1.1rem;
             margin-right: 10px;
         }
+
         .results-header-card .badge {
-            margin: 2px; /* Add small margin around badges */
-            font-weight: 400; /* Reduced from 500 */
+            margin: 2px;
+            /* Add small margin around badges */
+            font-weight: 400;
+            /* Reduced from 500 */
             /* Removed mr-2 class dependency */
         }
 
         /* --- Card Flip Animation --- */
         .flip-card-container {
-            perspective: 1000px; /* Perspective for 3D effect */
-            margin-bottom: 30px; /* Space between cards */
+            perspective: 1000px;
+            /* Perspective for 3D effect */
+            margin-bottom: 30px;
+            /* Space between cards */
             opacity: 0;
-            animation: fadeIn 0.8s ease-out forwards; /* No delay here, keep as is */
+            animation: fadeIn 0.8s ease-out forwards;
+            /* No delay here, keep as is */
         }
 
         .flip-card {
             position: relative;
             width: 100%;
-            min-height: 450px; /* Adjust height as needed */
+            min-height: 450px;
+            /* Adjust height as needed */
             transform-style: preserve-3d;
-            transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Smooth flip */
+            transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            /* Smooth flip */
             cursor: pointer;
         }
 
@@ -309,7 +375,8 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            backface-visibility: hidden; /* Hide the back side during flip */
+            backface-visibility: hidden;
+            /* Hide the back side during flip */
             display: flex;
             flex-direction: column;
             background-color: var(--card-bg);
@@ -320,58 +387,76 @@
         }
 
         .flip-card-back {
-            transform: rotateY(180deg); /* Initially hide the back */
+            transform: rotateY(180deg);
+            /* Initially hide the back */
             align-items: center;
             justify-content: center;
             padding: 20px;
             text-align: center;
-            background-color: var(--card-bg); /* Ensure background for contrast */
+            background-color: var(--card-bg);
+            /* Ensure background for contrast */
         }
 
         .flip-card-front img {
             width: 100%;
-            height: 350px; /* Fixed image height */
-            object-fit: cover; /* Cover the area */
+            height: 350px;
+            /* Fixed image height */
+            object-fit: cover;
+            /* Cover the area */
         }
 
         .flip-card-front .card-content {
             padding: 15px;
             text-align: center;
         }
-         .flip-card-front .card-content h5 {
+
+        .flip-card-front .card-content h5 {
             color: var(--accent-primary);
             margin-bottom: 10px;
-            font-weight: 400; /* Reduced from 500 */
-         }
-         .flip-card-front .card-content p {
+            font-weight: 400;
+            /* Reduced from 500 */
+        }
+
+        .flip-card-front .card-content p {
             font-size: 0.9rem;
-            color: #ccc; /* Lighter gray for details */
-            font-weight: 300; /* Reduced from 400 (matches body) */
-         }
+            color: #ccc;
+            /* Lighter gray for details */
+            font-weight: 300;
+            /* Reduced from 400 (matches body) */
+        }
 
         .flip-card-back h4 {
             color: var(--accent-primary);
             margin-bottom: 20px;
-            font-weight: 400; /* Reduced from 500 */
+            font-weight: 400;
+            /* Reduced from 500 */
         }
 
-        .flip-card-back .btn { /* General button styling on card back */
-             margin-top: 15px;
+        .flip-card-back .btn {
+            /* General button styling on card back */
+            margin-top: 15px;
         }
 
         /* Style the "Back to Image" button specifically */
         .flip-button {
-            border: none !important; /* Remove border */
-            box-shadow: 0 3px 8px var(--shadow-color); /* Add shadow */
-            color: var(--text-light); /* Set text color */
-            background-color: rgba(255, 255, 255, 0.05); /* Optional: Subtle background */
+            border: none !important;
+            /* Remove border */
+            box-shadow: 0 3px 8px var(--shadow-color);
+            /* Add shadow */
+            color: var(--text-light);
+            /* Set text color */
+            background-color: rgba(255, 255, 255, 0.05);
+            /* Optional: Subtle background */
             transition: background-color 0.2s ease, box-shadow 0.2s ease;
         }
 
         .flip-button:hover {
-            background-color: rgba(255, 255, 255, 0.1); /* Slightly lighter on hover */
-            box-shadow: 0 4px 10px var(--shadow-color); /* Enhance shadow on hover */
-            color: var(--text-light); /* Keep text color */
+            background-color: rgba(255, 255, 255, 0.1);
+            /* Slightly lighter on hover */
+            box-shadow: 0 4px 10px var(--shadow-color);
+            /* Enhance shadow on hover */
+            color: var(--text-light);
+            /* Keep text color */
         }
 
         /* --- Full Screen Details --- */
@@ -381,23 +466,28 @@
             left: 0;
             width: 100%;
             height: 100vh;
-            background: rgba(10, 10, 10, 0.98); /* Darker overlay */
-            z-index: 1050; /* Ensure it's above other elements */
+            background: rgba(10, 10, 10, 0.98);
+            /* Darker overlay */
+            z-index: 1050;
+            /* Ensure it's above other elements */
             padding: 30px;
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.5s ease, visibility 0s 0.5s linear;
-            /* display: flex; */ /* Let the .show class handle display */
+            /* display: flex; */
+            /* Let the .show class handle display */
             align-items: center;
             justify-content: center;
-            display: none; /* Initially hidden */
+            display: none;
+            /* Initially hidden */
         }
 
         .full-screen-details.show {
             opacity: 1;
             visibility: visible;
             transition: opacity 0.5s ease, visibility 0s 0s linear;
-            display: flex !important; /* Use flex and !important to ensure visibility */
+            display: flex !important;
+            /* Use flex and !important to ensure visibility */
         }
 
         .details-content {
@@ -408,21 +498,23 @@
             height: 90%;
             display: flex;
             flex-direction: column;
-            overflow: hidden; /* Prevent content overflow */
+            overflow: hidden;
+            /* Prevent content overflow */
             border: 1px solid var(--border-color);
             transform: scale(0.8);
             transition: transform 0.5s ease;
         }
 
         .full-screen-details.show .details-content {
-             transform: scale(1);
+            transform: scale(1);
         }
 
         .details-header {
             padding: 15px 25px;
             border-bottom: 1px solid var(--border-color);
             display: flex;
-            justify-content: flex-end; /* Move close button to the right */
+            justify-content: flex-end;
+            /* Move close button to the right */
         }
 
         .details-header .close-details {
@@ -438,28 +530,35 @@
             font-size: 1.2rem;
             padding: 0;
         }
+
         .details-header .close-details:hover {
             background: var(--text-light);
             color: var(--dark-bg);
         }
 
         .details-body {
-            flex-grow: 1; /* Take remaining space */
+            flex-grow: 1;
+            /* Take remaining space */
             display: flex;
-            overflow: hidden; /* Prevent inner scroll */
+            overflow: hidden;
+            /* Prevent inner scroll */
         }
 
         .details-nav {
-            width: 200px; /* Fixed width for nav */
+            width: 200px;
+            /* Fixed width for nav */
             border-right: 1px solid var(--border-color);
             padding: 20px 0;
-            background-color: rgba(0,0,0,0.1); /* Slightly different bg for nav */
+            background-color: rgba(0, 0, 0, 0.1);
+            /* Slightly different bg for nav */
         }
 
         .details-nav .nav-link {
             color: var(--text-light);
-            padding: 15px 25px; /* Increased vertical padding */
-            margin-bottom: 5px; /* Increased spacing between links */
+            padding: 15px 25px;
+            /* Increased vertical padding */
+            margin-bottom: 5px;
+            /* Increased spacing between links */
             border-left: 4px solid transparent;
             display: flex;
             align-items: center;
@@ -471,35 +570,48 @@
         }
 
         .details-nav .nav-link i {
-            width: 20px; /* Icon width */
+            width: 20px;
+            /* Icon width */
         }
 
         .details-nav .nav-link:hover {
-            background-color: rgba(0, 169, 165, 0.1); /* Darker Teal hover */
-            color: var(--accent-primary); /* Uses new darker teal */
+            background-color: rgba(0, 169, 165, 0.1);
+            /* Darker Teal hover */
+            color: var(--accent-primary);
+            /* Uses new darker teal */
         }
 
         .details-nav .nav-link.active {
-            border-left-color: var(--accent-primary) !important; /* Use the primary dark teal */
-            background-color: rgba(0, 169, 165, 0.15) !important; /* Use rgba of primary dark teal */
-            color: var(--accent-primary) !important; /* Use the primary dark teal for text/icon */
-            font-weight: 400; /* Reduced from 500 */
+            border-left-color: var(--accent-primary) !important;
+            /* Use the primary dark teal */
+            background-color: rgba(0, 169, 165, 0.15) !important;
+            /* Use rgba of primary dark teal */
+            color: var(--accent-primary) !important;
+            /* Use the primary dark teal for text/icon */
+            font-weight: 400;
+            /* Reduced from 500 */
         }
 
         .details-tab-content {
             flex-grow: 1;
-            padding: 0; /* Remove padding */
-            overflow: hidden; /* Hide overflow */
-            position: relative; /* For absolute positioning inside */
+            padding: 0;
+            /* Remove padding */
+            overflow: hidden;
+            /* Hide overflow */
+            position: relative;
+            /* For absolute positioning inside */
         }
 
         .details-tab-pane {
             width: 100%;
             height: 100%;
-            overflow: auto; /* Allow scrolling within the pane if needed */
-            padding: 30px; /* Add padding inside the pane */
+            overflow: auto;
+            /* Allow scrolling within the pane if needed */
+            padding: 30px;
+            /* Add padding inside the pane */
             opacity: 0;
-            animation: fadeIn 0.5s ease-out forwards; /* Removed 0.3s delay */
+            animation: fadeIn 0.5s ease-out forwards;
+            /* Removed 0.3s delay */
         }
 
         .full-size-image-container {
@@ -508,7 +620,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative; /* Needed for overlay */
+            position: relative;
+            /* Needed for overlay */
         }
 
         .full-size-image {
@@ -520,12 +633,15 @@
 
         .specs-overlay {
             position: absolute;
-            bottom: 30px; /* Adjust position */
-            right: 30px; /* Adjust position */
+            bottom: 30px;
+            /* Adjust position */
+            right: 30px;
+            /* Adjust position */
             display: flex;
             flex-direction: column;
             gap: 12px;
-            align-items: flex-end; /* Align items to the right */
+            align-items: flex-end;
+            /* Align items to the right */
         }
 
         .spec-item {
@@ -540,6 +656,7 @@
             transform: translateX(50px);
             animation: slideInFromRight 0.5s ease-out forwards;
         }
+
         /* Removed staggered animation delays */
         /* .spec-item:nth-child(1) { animation-delay: 0.5s; } */
         /* .spec-item:nth-child(2) { animation-delay: 0.6s; } */
@@ -550,7 +667,8 @@
         .spec-item strong {
             color: var(--accent-primary);
             margin-right: 8px;
-            font-weight: 400; /* Reduced from 500 */
+            font-weight: 400;
+            /* Reduced from 500 */
         }
 
         /* --- Fixed Back Button --- */
@@ -558,100 +676,192 @@
             position: fixed;
             top: 30px;
             right: 30px;
-            z-index: 1000; /* Ensure it's above most content */
+            z-index: 1000;
+            /* Ensure it's above most content */
         }
 
         .back-button-fixed a {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 55px; /* Size of the circle */
-            height: 55px; /* Size of the circle */
-            border-radius: 50%; /* Make it circular */
-            background-color: rgba(44, 44, 44, 0.6); /* Semi-transparent dark background */
-            backdrop-filter: blur(8px); /* Glassy blur effect */
-            -webkit-backdrop-filter: blur(8px); /* Safari support */
-            color: var(--text-light); /* Icon color */
-            font-size: 1.2rem; /* Icon size */
+            width: 55px;
+            /* Size of the circle */
+            height: 55px;
+            /* Size of the circle */
+            border-radius: 50%;
+            /* Make it circular */
+            background-color: rgba(44, 44, 44, 0.6);
+            /* Semi-transparent dark background */
+            backdrop-filter: blur(8px);
+            /* Glassy blur effect */
+            -webkit-backdrop-filter: blur(8px);
+            /* Safari support */
+            color: var(--text-light);
+            /* Icon color */
+            font-size: 1.2rem;
+            /* Icon size */
             text-decoration: none;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            /* Subtle border */
             transition: all 0.3s ease;
         }
 
         .back-button-fixed a:hover {
-            background-color: rgba(0, 169, 165, 0.7); /* Darker Accent color on hover */
-            color: var(--text-light); /* Changed to white icon */
-            transform: scale(1.05); /* Slight scale effect */
-            box-shadow: 0 6px 15px rgba(0, 169, 165, 0.4); /* Darker Teal shadow */
+            background-color: rgba(0, 169, 165, 0.7);
+            /* Darker Accent color on hover */
+            color: var(--text-light);
+            /* Changed to white icon */
+            transform: scale(1.05);
+            /* Slight scale effect */
+            box-shadow: 0 6px 15px rgba(0, 169, 165, 0.4);
+            /* Darker Teal shadow */
         }
 
         /* --- Animations --- */
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 4px 10px rgba(0, 169, 165, 0.3); }
-            50% { transform: scale(1.03); box-shadow: 0 6px 20px rgba(0, 169, 165, 0.6); }
-            100% { transform: scale(1); box-shadow: 0 4px 10px rgba(0, 169, 165, 0.3); }
+            0% {
+                transform: scale(1);
+                box-shadow: 0 4px 10px rgba(0, 169, 165, 0.3);
+            }
+
+            50% {
+                transform: scale(1.03);
+                box-shadow: 0 6px 20px rgba(0, 169, 165, 0.6);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 4px 10px rgba(0, 169, 165, 0.3);
+            }
         }
 
         @keyframes slideInFromRight {
-            from { opacity: 0; transform: translateX(50px); }
-            to { opacity: 1; transform: translateX(0); }
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         /* --- Utility --- */
-        .fw-400 { font-weight: 400 !important; } /* New utility for normal weight */
-        .fw-500 { font-weight: 500 !important; } /* Medium weight */
-        .fw-600 { font-weight: 600 !important; } /* Semi-bold weight */
-        .fw-700 { font-weight: 700 !important; } /* Bold weight */
-        .text-teal { color: var(--accent-primary); }
+        .fw-400 {
+            font-weight: 400 !important;
+        }
+
+        /* New utility for normal weight */
+        .fw-500 {
+            font-weight: 500 !important;
+        }
+
+        /* Medium weight */
+        .fw-600 {
+            font-weight: 600 !important;
+        }
+
+        /* Semi-bold weight */
+        .fw-700 {
+            font-weight: 700 !important;
+        }
+
+        /* Bold weight */
+        .text-teal {
+            color: var(--accent-primary);
+        }
 
         /* --- Welcome Screen Specific --- */
         #welcomeHeaderText {
-            font-size: 3rem; /* Increased font size */
-            font-weight: 100; /* Make it slightly bolder */
-            color: var(--text-light); /* Ensure text color */
-            margin-bottom: 1.5rem; /* Add space below the text */
+            font-size: 3rem;
+            /* Increased font size */
+            font-weight: 100;
+            /* Make it slightly bolder */
+            color: var(--text-light);
+            /* Ensure text color */
+            margin-bottom: 1.5rem;
+            /* Add space below the text */
             /* Animation is inherited from #welcomeScreen */
         }
 
         /* Hide original styles that might conflict */
-        .bg-white, .bg-light, .shadow-sm, .border-0 {
+        .bg-white,
+        .bg-light,
+        .shadow-sm,
+        .border-0 {
             background-color: transparent !important;
             box-shadow: none !important;
             border: none !important;
         }
-        .text-center { text-align: center; }
-        .mb-4 { margin-bottom: 1.5rem !important; } /* Adjust spacing */
-        .mt-5 { margin-top: 3rem !important; } /* Adjust spacing */
-        .py-3 { padding-top: 1rem !important; padding-bottom: 1rem !important; }
-        .px-5 { padding-left: 3rem !important; padding-right: 3rem !important; }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mb-4 {
+            margin-bottom: 1.5rem !important;
+        }
+
+        /* Adjust spacing */
+        .mt-5 {
+            margin-top: 3rem !important;
+        }
+
+        /* Adjust spacing */
+        .py-3 {
+            padding-top: 1rem !important;
+            padding-bottom: 1rem !important;
+        }
+
+        .px-5 {
+            padding-left: 3rem !important;
+            padding-right: 3rem !important;
+        }
 
         /* Adjust container padding */
-        .container-fluid.pt-4 { padding-top: 2rem !important; }
+        .container-fluid.pt-4 {
+            padding-top: 2rem !important;
+        }
 
         /* --- Sidebar Styles --- */
         #sidebar {
-            position: fixed;   /* <<< Makes it fixed */
-            left: 0;           /* <<< Aligns to the left */
-            top: 0;            /* <<< Aligns to the top */
-            width: var(--sidebar-width); /* <<< Sets the width */
-            height: 100vh;     /* <<< Sets full height */
+            position: fixed;
+            /* <<< Makes it fixed */
+            left: 0;
+            /* <<< Aligns to the left */
+            top: 0;
+            /* <<< Aligns to the top */
+            width: var(--sidebar-width);
+            /* <<< Sets the width */
+            height: 100vh;
+            /* <<< Sets full height */
             background-color: var(--card-bg);
             border-right: 1px solid var(--border-color);
             padding: 20px 0;
             z-index: 1000;
-            display: none;     /* <<< Hidden initially */
+            display: none;
+            /* <<< Hidden initially */
             overflow-y: auto;
             transition: transform 0.3s ease;
         }
 
         body.sidebar-visible #sidebar {
-            display: block;    /* <<< Shows the sidebar */
+            display: block;
+            /* <<< Shows the sidebar */
         }
 
         #sidebar h5 {
@@ -662,8 +872,10 @@
 
         #sidebar .nav-link {
             color: var(--text-light);
-            padding: 15px 25px; /* Increased vertical padding */
-            margin-bottom: 5px; /* Increased spacing between links */
+            padding: 15px 25px;
+            /* Increased vertical padding */
+            margin-bottom: 5px;
+            /* Increased spacing between links */
             border-left: 4px solid transparent;
             display: flex;
             align-items: center;
@@ -673,31 +885,77 @@
             font-weight: 300;
             font-size: 0.95rem;
         }
+
         #sidebar .nav-link i.fa-fw {
             width: 20px;
         }
+
         #sidebar .nav-link:hover {
             background-color: rgba(0, 169, 165, 0.1);
             color: var(--accent-primary);
         }
+
         #sidebar .nav-link.active {
             border-left-color: var(--accent-primary) !important;
             background-color: rgba(0, 169, 165, 0.15) !important;
             color: var(--accent-primary) !important;
             font-weight: 400;
         }
-       
+
         /* --- Main Content Wrapper --- */
         #main-content-wrapper {
-            transition: margin-left 0.3s ease; /* Smooth transition for the margin */
+            transition: margin-left 0.3s ease;
+            /* Smooth transition for the margin */
             /* No margin-left by default */
         }
 
         body.sidebar-visible #main-content-wrapper {
-            margin-left: var(--sidebar-width); /* <<< Pushes content to the right */
+            margin-left: var(--sidebar-width);
+            /* <<< Pushes content to the right */
         }
 
-       
+        .pdf-viewer {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .pdf-fullscreen-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+            z-index: 100;
+            transition: background-color 0.3s;
+        }
+
+        .pdf-fullscreen-btn:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .pdf-container {
+            position: relative;
+        }
+
+        .pdf-viewer.fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw !important;
+            height: 100vh !important;
+            z-index: 9999;
+            border-radius: 0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .carousel-control-prev-icon,
     </style>
 </head>
 
@@ -708,41 +966,40 @@
             <a class="nav-link" href="#" id="sidebarViewFeatured">
                 <i class="fa-solid fa-star fa-fw"></i> View Featured Plans
             </a>
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="/view-homes">
                 <i class="fa-solid fa-house fa-fw"></i> Our Homes
             </a>
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="{{ url_for('sections.view_section_subsections', section_id=1) }}">
                 <i class="fa-solid fa-compass-drafting fa-fw"></i> Architectural Elements
             </a>
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="{{ url_for('sections.view_section_subsections', section_id=3) }}">
                 <i class="fa-solid fa-building fa-fw"></i> Structural Designs
             </a>
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="{{ url_for('sections.view_section_subsections', section_id=2) }}">
                 <i class="fa-solid fa-bolt fa-fw"></i> MEP Layouts
             </a>
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="{{ url_for('sections.view_section_subsections', section_id=4) }}">
                 <i class="fa-solid fa-helmet-safety fa-fw"></i> Construction Process
             </a>
-             <a class="nav-link" href="#">
+            <a class="nav-link" href="{{ url_for('sections.view_section_subsections', section_id=5) }}">
                 <i class="fa-solid fa-comments fa-fw"></i> Customer Stories
             </a>
-             <a class="nav-link" href="#">
+            <a class="nav-link" href="{{ url_for('sections.view_section_subsections', section_id=6) }}">
                 <i class="fa-solid fa-couch fa-fw"></i> Interior Design
             </a>
-             <a class="nav-link" href="#">
+            <a class="nav-link" href="{{ url_for('sections.view_section_subsections', section_id=7) }}">
                 <i class="fa-solid fa-pen-ruler fa-fw"></i> Drawing & Design
             </a>
-             <a class="nav-link" href="/check_floor_plan_and_elevation" id="sidebarHomeLink"> <!-- Link back to start -->
+            <a class="nav-link" href="/check_floor_plan_and_elevation" id="sidebarHomeLink">
                 <i class="fa-solid fa-arrow-left fa-fw"></i> Back to Start
             </a>
-            <!-- Add other links similarly -->
         </nav>
     </div>
 
     <div id="main-content-wrapper">
         <div class="container-fluid pt-4 pb-0">
             <!-- Welcome Screen -->
-             {% if not view_floor_plans %}
+            {% if not view_floor_plans %}
             <div id="welcomeScreen" class="row justify-content-center">
                 <div class="col-md-8 text-center"> <!-- Wider column -->
                     <h2 id="welcomeHeaderText">Welcome to buildAhome</h2>
@@ -753,65 +1010,72 @@
             </div>
             {% endif %}
             <!-- Navigation Options -->
-            <div id="navigationOptions" class="row justify-content-center mt-3 {% if view_floor_plans %}d-none{% else %}d-none{% endif %} py-5"> <!-- Initially hidden, kept padding -->
+            <div id="navigationOptions"
+                class="row justify-content-center mt-3 {% if view_floor_plans %}d-none{% else %}d-none{% endif %} py-5">
                 <div class="col-md-10">
                     <h3 class="text-center mb-4 text-white">What would you like to explore?</h3>
-                    <div class="row pt-4 justify-content-center"> <!-- Center buttons -->
+                    <div class="row pt-4 justify-content-center">
                         <div class="col-md-4 mb-3 option-tab">
                             <button class="btn btn-outline-teal w-100 p-4" id="viewFeaturedPlans">
-                                <i class="fa-solid fa-star fa-2x"></i> <!-- Updated icon -->
-                                <span>View Featured Plans</span> <!-- Wrapped text -->
+                                <i class="fa-solid fa-star fa-2x"></i>
+                                <span>View Featured Plans</span>
                             </button>
                         </div>
                         <div class="col-md-4 mb-3 option-tab">
-                            <button class="btn btn-outline-teal w-100 p-4">
-                                 <i class="fa-solid fa-house fa-2x"></i> <!-- Updated icon -->
-                                 <span>Our Homes</span> <!-- Wrapped text -->
+                            <button class="btn btn-outline-teal w-100 p-4" onclick="window.location.href='/view-homes'">
+                                <i class="fa-solid fa-house fa-2x"></i>
+                                <span>Our Homes</span>
                             </button>
                         </div>
                         <div class="col-md-4 mb-3 option-tab">
-                            <button class="btn btn-outline-teal w-100 p-4">
-                                <i class="fa-solid fa-compass-drafting fa-2x"></i> <!-- Updated icon -->
-                                <span>Architectural Elements</span> <!-- Wrapped text -->
+                            <button class="btn btn-outline-teal w-100 p-4"
+                                onclick="window.location.href='{{ url_for('sections.view_section_subsections', section_id=1) }}'">
+                                <i class="fa-solid fa-compass-drafting fa-2x"></i>
+                                <span>Architectural Elements</span>
                             </button>
                         </div>
                         <div class="col-md-4 mb-3 option-tab">
-                            <button class="btn btn-outline-teal w-100 p-4">
-                                <i class="fa-solid fa-building fa-2x"></i> <!-- Alternative icon for Structural Designs -->
-                                <span>Structural Designs</span> <!-- Wrapped text -->
+                            <button class="btn btn-outline-teal w-100 p-4"
+                                onclick="window.location.href='{{ url_for('sections.view_section_subsections', section_id=3) }}'">
+                                <i class="fa-solid fa-building fa-2x"></i>
+                                <span>Structural Designs</span>
                             </button>
                         </div>
                         <div class="col-md-4 mb-3 option-tab">
-                            <button class="btn btn-outline-teal w-100 p-4">
-                                <i class="fa-solid fa-bolt fa-2x"></i> <!-- Alternative icon for MEP -->
-                                <span>MEP Layouts and Designs</span> <!-- Wrapped text -->
+                            <button class="btn btn-outline-teal w-100 p-4"
+                                onclick="window.location.href='{{ url_for('sections.view_section_subsections', section_id=2) }}'">
+                                <i class="fa-solid fa-bolt fa-2x"></i>
+                                <span>MEP Layouts and Designs</span>
                             </button>
                         </div>
                         <div class="col-md-4 mb-3 option-tab">
-                            <button class="btn btn-outline-teal w-100 p-4">
-                                <i class="fa-solid fa-helmet-safety fa-2x"></i> <!-- Alternative icon for Construction -->
-                                <span>Construction process</span> <!-- Wrapped text -->
+                            <button class="btn btn-outline-teal w-100 p-4"
+                                onclick="window.location.href='{{ url_for('sections.view_section_subsections', section_id=4) }}'">
+                                <i class="fa-solid fa-helmet-safety fa-2x"></i>
+                                <span>Construction process</span>
                             </button>
                         </div>
                         <div class="col-md-4 mb-3 option-tab">
-                            <button class="btn btn-outline-teal w-100 p-4">
-                                <i class="fa-solid fa-comments fa-2x"></i> <!-- Updated icon -->
-                                <span>Customer Stories</span> <!-- Wrapped text -->
+                            <button class="btn btn-outline-teal w-100 p-4"
+                                onclick="window.location.href='{{ url_for('sections.view_section_subsections', section_id=5) }}'">
+                                <i class="fa-solid fa-comments fa-2x"></i>
+                                <span>Customer Stories</span>
                             </button>
                         </div>
                         <div class="col-md-4 mb-3 option-tab">
-                            <button class="btn btn-outline-teal w-100 p-4">
-                                <i class="fa-solid fa-couch fa-2x"></i> <!-- Updated icon -->
-                                <span>Interior Design</span> <!-- Wrapped text -->
+                            <button class="btn btn-outline-teal w-100 p-4"
+                                onclick="window.location.href='{{ url_for('sections.view_section_subsections', section_id=6) }}'">
+                                <i class="fa-solid fa-couch fa-2x"></i>
+                                <span>Interior Design</span>
                             </button>
                         </div>
                         <div class="col-md-4 mb-3 option-tab">
-                            <button class="btn btn-outline-teal w-100 p-4">
-                                <i class="fa-solid fa-pen-ruler fa-2x"></i> <!-- Updated icon -->
-                                <span>Drawing and Design</span> <!-- Wrapped text -->
+                            <button class="btn btn-outline-teal w-100 p-4"
+                                onclick="window.location.href='{{ url_for('sections.view_section_subsections', section_id=7) }}'">
+                                <i class="fa-solid fa-pen-ruler fa-2x"></i>
+                                <span>Drawing and Design</span>
                             </button>
                         </div>
-                        <!-- Add other options similarly -->
                     </div>
                 </div>
             </div>
@@ -823,12 +1087,14 @@
                     <div class="row justify-content-center">
                         <div class="col-md-5 option-tab"> <!-- Adjust column size -->
                             <button class="btn btn-outline-teal w-100 p-4" id="showFeaturedPlans">
-                                 <i class="fa-solid fa-table-cells-large fa-2x mb-2"></i><br>Show All Featured Plans <!-- Updated icon -->
+                                <i class="fa-solid fa-table-cells-large fa-2x mb-2"></i><br>Show All Featured Plans
+                                <!-- Updated icon -->
                             </button>
                         </div>
                         <div class="col-md-5 option-tab"> <!-- Adjust column size -->
                             <button class="btn btn-outline-teal w-100 p-4" id="searchFeaturedPlans">
-                                 <i class="fa-solid fa-magnifying-glass fa-2x mb-2"></i><br>Search Featured Plans <!-- Updated icon -->
+                                <i class="fa-solid fa-magnifying-glass fa-2x mb-2"></i><br>Search Featured Plans
+                                <!-- Updated icon -->
                             </button>
                         </div>
                     </div>
@@ -843,7 +1109,8 @@
                             <h3 class="card-title text-center mb-4 fw-600">Select Preferences</h3>
                             <form>
                                 <div class="form-group row align-items-center"> <!-- Use row for alignment -->
-                                    <label for="site_dimension" class="col-md-4 col-form-label text-md-right">Site Dimension</label> <!-- Right align label on medium+ -->
+                                    <label for="site_dimension" class="col-md-4 col-form-label text-md-right">Site
+                                        Dimension</label> <!-- Right align label on medium+ -->
                                     <div class="col-md-8">
                                         <select name="site_dimension" id="site_dimension" class="form-control select2">
                                             <option value="">Select site dimension</option>
@@ -869,7 +1136,8 @@
                                 </div>
 
                                 <div class="form-group row align-items-center">
-                                    <label for="floors" class="col-md-4 col-form-label text-md-right">Number of Floors</label>
+                                    <label for="floors" class="col-md-4 col-form-label text-md-right">Number of
+                                        Floors</label>
                                     <div class="col-md-8">
                                         <select name="floors" id="floors" class="form-control select2">
                                             <option value="">Select number of floors</option>
@@ -883,7 +1151,8 @@
                                 </div>
 
                                 <div class="form-group row align-items-center">
-                                    <label for="useType" class="col-md-4 col-form-label text-md-right">Type of Use</label>
+                                    <label for="useType" class="col-md-4 col-form-label text-md-right">Type of
+                                        Use</label>
                                     <div class="col-md-8">
                                         <select class="form-control select2" id="useType">
                                             <option value="">Select type</option>
@@ -895,7 +1164,8 @@
                                 </div>
 
                                 <div class="text-center mt-4"> <!-- Add margin top -->
-                                    <button type="submit" class="btn btn-teal px-5 py-2">Submit</button> <!-- Use btn-teal -->
+                                    <button type="submit" class="btn btn-teal px-5 py-2">Submit</button>
+                                    <!-- Use btn-teal -->
                                 </div>
                             </form>
                         </div>
@@ -917,25 +1187,26 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="results-header-card">
-                         <p class="mb-0">
+                        <p class="mb-0">
                             <i class="fa-solid fa-filter"></i> <!-- Updated icon -->
                             Showing plans for:
-                         </p>
-                            {% if request.args.get('site_dimension') %}
-                                <span class="badge">Dim: {{ request.args.get('site_dimension') }}</span>
-                            {% endif %}
-                            {% if request.args.get('facing') %}
-                                <span class="badge">Facing: {{ request.args.get('facing')|title }}</span>
-                            {% endif %}
-                            {% if request.args.get('floors') %}
-                                <span class="badge">Floors: {{ request.args.get('floors') }}</span>
-                            {% endif %}
-                            {% if request.args.get('use_type') %}
-                                <span class="badge">Type: {{ request.args.get('use_type')|title }}</span>
-                            {% endif %}
-                            {% if not request.args.get('site_dimension') and not request.args.get('facing') and not request.args.get('floors') and not request.args.get('use_type') %}
-                                 <span class="badge">All Featured Plans</span>
-                            {% endif %}
+                        </p>
+                        {% if request.args.get('site_dimension') %}
+                        <span class="badge">Dim: {{ request.args.get('site_dimension') }}</span>
+                        {% endif %}
+                        {% if request.args.get('facing') %}
+                        <span class="badge">Facing: {{ request.args.get('facing')|title }}</span>
+                        {% endif %}
+                        {% if request.args.get('floors') %}
+                        <span class="badge">Floors: {{ request.args.get('floors') }}</span>
+                        {% endif %}
+                        {% if request.args.get('use_type') %}
+                        <span class="badge">Type: {{ request.args.get('use_type')|title }}</span>
+                        {% endif %}
+                        {% if not request.args.get('site_dimension') and not request.args.get('facing') and not
+                        request.args.get('floors') and not request.args.get('use_type') %}
+                        <span class="badge">All Featured Plans</span>
+                        {% endif %}
                         </p>
                     </div>
                 </div>
@@ -943,28 +1214,32 @@
 
             <div class="row">
                 {% if no_floor_plans_and_elevations %}
-                    <div class="col-md-12 my-5 text-center">
-                         <div class="alert alert-warning bg-transparent border border-warning text-warning" role="alert"> <!-- Themed alert -->
-                            <h4 class="alert-heading"><i class="fa-solid fa-triangle-exclamation mr-2"></i> No Plans Found</h4> <!-- Updated icon -->
-                            <p>No floor plans and elevations match the selected preferences.</p>
-                            <hr class="border-warning">
-                            <p class="mb-0">Try adjusting your search criteria or view all featured plans.</p>
-                        </div>
+                <div class="col-md-12 my-5 text-center">
+                    <div class="alert alert-warning bg-transparent border border-warning text-warning" role="alert">
+                        <!-- Themed alert -->
+                        <h4 class="alert-heading"><i class="fa-solid fa-triangle-exclamation mr-2"></i> No Plans Found
+                        </h4> <!-- Updated icon -->
+                        <p>No floor plans and elevations match the selected preferences.</p>
+                        <hr class="border-warning">
+                        <p class="mb-0">Try adjusting your search criteria or view all featured plans.</p>
                     </div>
+                </div>
                 {% endif %}
 
                 {% for plan in floor_plans_and_elevations %}
                 <div class="col-lg-3 col-md-4 col-sm-6"> <!-- Responsive columns -->
-                    <div class="flip-card-container" style="animation-delay: {{ loop.index0 * 0.1 }}s;"> <!-- Staggered animation -->
+                    <div class="flip-card-container" style="animation-delay: {{ loop.index0 * 0.1 }}s;">
+                        <!-- Staggered animation -->
                         <div class="flip-card" id="card{{ loop.index0 }}" data-plan-id="{{ loop.index0 }}">
                             <!-- Card Front -->
                             <div class="flip-card-front">
                                 {% if plan[6] %}
-                                    <img src="{{ plan[6] }}" alt="Elevation {{ loop.index }}">
+                                <img src="/media/{{ plan[6].split('/')[-1] }}" alt="Elevation {{ loop.index }}">
                                 {% else %}
-                                    <div class="d-flex align-items-center justify-content-center" style="height: 350px; background-color: #333;">
-                                        <span class="text-muted">No Elevation Image</span>
-                                    </div>
+                                <div class="d-flex align-items-center justify-content-center"
+                                    style="height: 350px; background-color: #333;">
+                                    <span class="text-muted">No Elevation Image</span>
+                                </div>
                                 {% endif %}
                                 <div class="card-content">
                                     <h5 class="fw-600">Plan {{ loop.index }}</h5>
@@ -973,17 +1248,20 @@
                             </div>
                             <!-- Card Back -->
                             <div class="flip-card-back">
-                                 <h4 class="fw-600">Plan {{ loop.index }} Details</h4>
-                                 <p><strong>Dimensions:</strong> {{ plan[1] }}</p>
-                                 <p><strong>Facing:</strong> {{ plan[2]|title }}</p>
-                                 <p><strong>Type:</strong> {{ plan[3]|title }}</p>
-                                 <p><strong>Floors:</strong> {{ plan[4] }}</p>
-                                 <button class="btn btn-teal view-details-button text-white p-3 px-5" data-plan-id="{{ loop.index0 }}">
-                                     <i class="fa-solid fa-magnifying-glass-plus mr-2"></i> View Fullscreen <!-- Updated icon -->
-                                 </button>
-                                 <button class="btn btn-sm mt-3 flip-button p-3 px-5" data-target="card{{ loop.index0 }}">
-                                     <i class="fa-solid fa-rotate-left mr-1"></i> Back to Image <!-- Updated icon -->
-                                 </button>
+                                <h4 class="fw-600">Plan {{ loop.index }} Details</h4>
+                                <p><strong>Dimensions:</strong> {{ plan[1] }}</p>
+                                <p><strong>Facing:</strong> {{ plan[2]|title }}</p>
+                                <p><strong>Type:</strong> {{ plan[3]|title }}</p>
+                                <p><strong>Floors:</strong> {{ plan[4] }}</p>
+                                <button class="btn btn-teal view-details-button text-white p-3 px-5"
+                                    data-plan-id="{{ loop.index0 }}">
+                                    <i class="fa-solid fa-magnifying-glass-plus mr-2"></i> View Fullscreen
+                                    <!-- Updated icon -->
+                                </button>
+                                <button class="btn btn-sm mt-3 flip-button p-3 px-5"
+                                    data-target="card{{ loop.index0 }}">
+                                    <i class="fa-solid fa-rotate-left mr-1"></i> Back to Image <!-- Updated icon -->
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -1002,22 +1280,29 @@
                         <!-- Body with Nav and Content -->
                         <div class="details-body">
                             <!-- Vertical Tabs Navigation -->
-                            <nav class="details-nav nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
-                                 <a class="nav-link active" id="v-pills-elevation-tab-{{ loop.index0 }}" data-toggle="pill" href="#v-pills-elevation-{{ loop.index0 }}" role="tab" aria-controls="v-pills-elevation-{{ loop.index0 }}" aria-selected="true">
+                            <nav class="details-nav nav flex-column nav-pills" role="tablist"
+                                aria-orientation="vertical">
+                                <a class="nav-link active" id="v-pills-elevation-tab-{{ loop.index0 }}"
+                                    data-toggle="pill" href="#v-pills-elevation-{{ loop.index0 }}" role="tab"
+                                    aria-controls="v-pills-elevation-{{ loop.index0 }}" aria-selected="true">
                                     <i class="fa-solid fa-building"></i> Elevation <!-- Updated icon -->
-                                 </a>
-                                 <a class="nav-link" id="v-pills-floorplan-tab-{{ loop.index0 }}" data-toggle="pill" href="#v-pills-floorplan-{{ loop.index0 }}" role="tab" aria-controls="v-pills-floorplan-{{ loop.index0 }}" aria-selected="false">
+                                </a>
+                                <a class="nav-link" id="v-pills-floorplan-tab-{{ loop.index0 }}" data-toggle="pill"
+                                    href="#v-pills-floorplan-{{ loop.index0 }}" role="tab"
+                                    aria-controls="v-pills-floorplan-{{ loop.index0 }}" aria-selected="false">
                                     <i class="fa-solid fa-map-location-dot"></i> Floor Plan <!-- Updated icon -->
-                                 </a>
-                                 <!-- Add more tabs if needed -->
+                                </a>
+                                <!-- Add more tabs if needed -->
                             </nav>
 
                             <!-- Tabs Content -->
                             <div class="details-tab-content tab-content">
-                                <div class="details-tab-pane tab-pane fade show active" id="v-pills-elevation-{{ loop.index0 }}" role="tabpanel" aria-labelledby="v-pills-elevation-tab-{{ loop.index0 }}">
+                                <div class="details-tab-pane tab-pane fade show active"
+                                    id="v-pills-elevation-{{ loop.index0 }}" role="tabpanel"
+                                    aria-labelledby="v-pills-elevation-tab-{{ loop.index0 }}">
                                     <div class="full-size-image-container">
                                         {% if plan[6] %}
-                                        <img src="{{ plan[6] }}" class="full-size-image" alt="Elevation Full">
+                                        <img src="/media/{{ plan[6].split('/')[-1] }}" class="full-size-image" alt="Elevation Full">
                                         {% else %}
                                         <p class="text-muted">No Elevation Image Available</p>
                                         {% endif %}
@@ -1029,11 +1314,12 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="details-tab-pane tab-pane fade" id="v-pills-floorplan-{{ loop.index0 }}" role="tabpanel" aria-labelledby="v-pills-floorplan-tab-{{ loop.index0 }}">
-                                     <div class="full-size-image-container">
-                                         {% if plan[5] %}
-                                        <img src="/{{ plan[5] }}" class="full-size-image" alt="Floor Plan Full">
-                                         {% else %}
+                                <div class="details-tab-pane tab-pane fade" id="v-pills-floorplan-{{ loop.index0 }}"
+                                    role="tabpanel" aria-labelledby="v-pills-floorplan-tab-{{ loop.index0 }}">
+                                    <div class="full-size-image-container">
+                                        {% if plan[5] %}
+                                        <img src="/media/{{ plan[5].split('/')[-1] }}" class="full-size-image" alt="Floor Plan Full">
+                                        {% else %}
                                         <p class="text-muted">No Floor Plan Image Available</p>
                                         {% endif %}
                                         <div class="specs-overlay">
@@ -1044,7 +1330,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                 <!-- Add more tab panes if needed -->
+                                <!-- Add more tab panes if needed -->
                             </div>
                         </div>
                     </div>
@@ -1058,7 +1344,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('.select2').select2({
                 theme: "default", // Use default theme which we can style
                 width: '100%' // Ensure it takes full width
@@ -1073,7 +1359,7 @@
 
             // Welcome screen handler
             if (document.getElementById('welcomeButton')) {
-                document.getElementById('welcomeButton').addEventListener('click', function() {
+                document.getElementById('welcomeButton').addEventListener('click', function () {
                     if (welcomeScreen) welcomeScreen.style.display = 'none'; // Hide welcome screen
                     if (navigationOptions) {
                         navigationOptions.classList.remove('d-none'); // Show navigation options
@@ -1082,14 +1368,14 @@
                     document.body.classList.add('sidebar-visible'); // Show sidebar
                 });
             } else if (navigationOptions && !document.querySelector('.view-floor-plans-active')) {
-                 // If welcome screen is skipped show nav directly
-                 if (navigationOptions) navigationOptions.classList.remove('d-none');
-                 document.body.classList.add('sidebar-visible'); // Show sidebar if welcome is skipped
+                // If welcome screen is skipped show nav directly
+                if (navigationOptions) navigationOptions.classList.remove('d-none');
+                document.body.classList.add('sidebar-visible'); // Show sidebar if welcome is skipped
             }
 
             // Featured plans handler (Button within the main nav options)
             if (document.getElementById('viewFeaturedPlans')) {
-                document.getElementById('viewFeaturedPlans').addEventListener('click', function() {
+                document.getElementById('viewFeaturedPlans').addEventListener('click', function () {
                     if (navigationOptions) navigationOptions.classList.add('d-none'); // Hide nav options
                     if (featuredPlansOptions) {
                         featuredPlansOptions.classList.remove('d-none'); // Show featured options
@@ -1098,11 +1384,11 @@
                     // Sidebar should already be visible here
                 });
             }
-             // Sidebar link handler (Example for View Featured)
-             if (document.getElementById('sidebarViewFeatured')) {
-                document.getElementById('sidebarViewFeatured').addEventListener('click', function(e) {
+            // Sidebar link handler (Example for View Featured)
+            if (document.getElementById('sidebarViewFeatured')) {
+                document.getElementById('sidebarViewFeatured').addEventListener('click', function (e) {
                     e.preventDefault(); // Prevent default link behavior
-                     // Hide other sections if necessary
+                    // Hide other sections if necessary
                     if (siteForm) siteForm.classList.add('d-none');
                     if (navigationOptions) navigationOptions.classList.add('d-none');
                     // Show the target section
@@ -1110,17 +1396,17 @@
                         featuredPlansOptions.classList.remove('d-none');
                         featuredPlansOptions.style.opacity = 1;
                     }
-                     // Add 'active' class to this link, remove from others (optional)
-                     $('#sidebar .nav-link').removeClass('active');
-                     $(this).addClass('active');
-                     // hide container-fluid
+                    // Add 'active' class to this link, remove from others (optional)
+                    $('#sidebar .nav-link').removeClass('active');
+                    $(this).addClass('active');
+                    // hide container-fluid
                 });
-             }
+            }
 
 
             // Show featured plans handler (Button within featured plans options)
             if (document.getElementById('showFeaturedPlans')) {
-                document.getElementById('showFeaturedPlans').addEventListener('click', function() {
+                document.getElementById('showFeaturedPlans').addEventListener('click', function () {
                     // Add a class to body or container to indicate results are shown
                     // document.body.classList.add('view-floor-plans-active'); // Already added by load logic
                     window.location.href = `${window.location.pathname}?view=featured`;
@@ -1130,20 +1416,20 @@
 
             // Search featured plans handler (Button within featured plans options)
             if (document.getElementById('searchFeaturedPlans')) {
-                document.getElementById('searchFeaturedPlans').addEventListener('click', function() {
+                document.getElementById('searchFeaturedPlans').addEventListener('click', function () {
                     if (featuredPlansOptions) featuredPlansOptions.classList.add('d-none'); // Hide featured options
                     if (siteForm) {
                         siteForm.classList.remove('d-none'); // Show form
                         siteForm.style.opacity = 1;
                     }
-                     // Sidebar should already be visible
+                    // Sidebar should already be visible
                 });
             }
 
             // --- Form Submission ---
             const form = document.querySelector('#siteForm form');
             if (form) {
-                form.addEventListener('submit', function(e) {
+                form.addEventListener('submit', function (e) {
                     e.preventDefault();
                     // ... existing form data collection ...
 
@@ -1154,78 +1440,78 @@
                     if (floors) queryParams.set('floors', floors);
                     if (useType) queryParams.set('use_type', useType);
 
-                     // document.body.classList.add('view-floor-plans-active'); // Already added by load logic
+                    // document.body.classList.add('view-floor-plans-active'); // Already added by load logic
                     // Redirect - sidebar should remain visible after page load
                     window.location.href = `${window.location.pathname}?${queryParams.toString()}`;
                 });
             }
 
-             // --- Card Flip ---
-             // Add click listener to the FRONT of the card to flip it
-             $('.flip-card-front').on('click', function() {
-                 $(this).closest('.flip-card').addClass('flipped');
-             });
+            // --- Card Flip ---
+            // Add click listener to the FRONT of the card to flip it
+            $('.flip-card-front').on('click', function () {
+                $(this).closest('.flip-card').addClass('flipped');
+            });
 
-             // Add click listener to the "Back to Image" button to flip it back
-             $('.flip-button').on('click', function() {
-                 // Find the parent flip-card container and remove the 'flipped' class
-                 $(this).closest('.flip-card').removeClass('flipped');
-             });
+            // Add click listener to the "Back to Image" button to flip it back
+            $('.flip-button').on('click', function () {
+                // Find the parent flip-card container and remove the 'flipped' class
+                $(this).closest('.flip-card').removeClass('flipped');
+            });
 
-             // --- Full Screen Details ---
-             // Add click listener for the "View Fullscreen" button on the card back
-             $('.view-details-button').on('click', function(e) {
-                 e.stopPropagation(); // Prevent the click from bubbling up to other elements if needed
-                 const planId = $(this).data('plan-id');
-                 const detailsDiv = $(`#planDetails${planId}`);
+            // --- Full Screen Details ---
+            // Add click listener for the "View Fullscreen" button on the card back
+            $('.view-details-button').on('click', function (e) {
+                e.stopPropagation(); // Prevent the click from bubbling up to other elements if needed
+                const planId = $(this).data('plan-id');
+                const detailsDiv = $(`#planDetails${planId}`);
 
-                 if (detailsDiv.length) {
-                     detailsDiv.addClass('show');
-                     // Optionally hide the main content wrapper for a cleaner look
+                if (detailsDiv.length) {
+                    detailsDiv.addClass('show');
+                    // Optionally hide the main content wrapper for a cleaner look
                     //  if (mainWrapper) $(mainWrapper).hide();
-                     // Optionally hide the fixed back button if it overlaps
-                     $('.back-button-fixed').hide();
-                 }
-             });
+                    // Optionally hide the fixed back button if it overlaps
+                    $('.back-button-fixed').hide();
+                }
+            });
 
-             // Add click listener for the close button inside the full-screen details
-             $('.close-details').on('click', function() {
-                 const planId = $(this).data('plan-id');
-                 const detailsDiv = $(`#planDetails${planId}`);
+            // Add click listener for the close button inside the full-screen details
+            $('.close-details').on('click', function () {
+                const planId = $(this).data('plan-id');
+                const detailsDiv = $(`#planDetails${planId}`);
 
-                 if (detailsDiv.length) {
-                     detailsDiv.removeClass('show');
-                     // Restore the main content wrapper after a short delay for the transition
-                     setTimeout(() => {
-                         if (mainWrapper) $(mainWrapper).show();
-                          // Restore the fixed back button if it was hidden
-                          $('.back-button-fixed').show();
-                     }, 500); // Match the transition duration in CSS if possible
-                 }
-             });
+                if (detailsDiv.length) {
+                    detailsDiv.removeClass('show');
+                    // Restore the main content wrapper after a short delay for the transition
+                    setTimeout(() => {
+                        if (mainWrapper) $(mainWrapper).show();
+                        // Restore the fixed back button if it was hidden
+                        $('.back-button-fixed').show();
+                    }, 500); // Match the transition duration in CSS if possible
+                }
+            });
 
 
             // Add class if plans are being viewed on load OR if welcome screen is absent
             {% if view_floor_plans %}
-                document.body.classList.add('sidebar-visible'); // Show sidebar
-                document.body.classList.add('view-floor-plans-active'); // Keep this for results logic
-                // Ensure initial screens are hidden if results are shown
-                if (welcomeScreen) welcomeScreen.style.display = 'none';
-                if (navigationOptions) navigationOptions.classList.add('d-none');
-                if (featuredPlansOptions) featuredPlansOptions.classList.add('d-none');
-                if (siteForm) siteForm.classList.add('d-none');
+            document.body.classList.add('sidebar-visible'); // Show sidebar
+            document.body.classList.add('view-floor-plans-active'); // Keep this for results logic
+            // Ensure initial screens are hidden if results are shown
+            if (welcomeScreen) welcomeScreen.style.display = 'none';
+            if (navigationOptions) navigationOptions.classList.add('d-none');
+            if (featuredPlansOptions) featuredPlansOptions.classList.add('d-none');
+            if (siteForm) siteForm.classList.add('d-none');
             {% else %}
-                 // If not viewing plans, check if welcome screen exists
-                 if(welcomeScreen) {
-                    // Welcome screen exists, sidebar hidden initially
-                    document.body.classList.remove('sidebar-visible');
-                 } else {
-                    // No welcome screen (maybe direct link or error), show sidebar and nav options
-                    document.body.classList.add('sidebar-visible');
-                    if (navigationOptions) {
-                        navigationOptions.classList.remove('d-none');
-                    }
-                 }
+            // If not viewing plans, check if welcome screen exists
+            if (welcomeScreen) {
+                // Welcome screen exists, sidebar hidden initially
+                document.body.classList.remove('sidebar-visible');
+            } else {
+                // No welcome screen (maybe direct link or error), show sidebar and nav options
+                document.body.classList.add('sidebar-visible');
+                if (navigationOptions) {
+                    navigationOptions.classList.remove('d-none');
+                }
+            }
             {% endif %}
 
             // --- Sidebar Link Click Handling (Example - needs expansion) ---
@@ -1237,17 +1523,17 @@
             // You might want to give IDs to the sidebar links to target them easily.
 
             // Example: Make sidebar link trigger the same as original button
-             if (document.getElementById('sidebarViewFeatured') && document.getElementById('viewFeaturedPlans')) {
-                 document.getElementById('sidebarViewFeatured').addEventListener('click', (e) => {
-                     e.preventDefault();
-                     document.getElementById('viewFeaturedPlans').click(); // Simulate click on original button
-                     // Add active class handling
-                     $('#sidebar .nav-link').removeClass('active');
-                     $(e.target).closest('a').addClass('active');
-                     $('.elevation-container').hide();
-                 });
-             }
-             // Add similar handlers for other sidebar links corresponding to original buttons
+            if (document.getElementById('sidebarViewFeatured') && document.getElementById('viewFeaturedPlans')) {
+                document.getElementById('sidebarViewFeatured').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.getElementById('viewFeaturedPlans').click(); // Simulate click on original button
+                    // Add active class handling
+                    $('#sidebar .nav-link').removeClass('active');
+                    $(e.target).closest('a').addClass('active');
+                    $('.elevation-container').hide();
+                });
+            }
+            // Add similar handlers for other sidebar links corresponding to original buttons
 
 
         });

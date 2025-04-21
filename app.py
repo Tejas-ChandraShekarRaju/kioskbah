@@ -5,16 +5,51 @@ from werkzeug.utils import secure_filename
 import os
 import time
 import sqlite3
+import boto3
+from models import db
+from routes import bp as sections_bp
+from home_routes import bp as home_bp
+from kiosk_routes import bp as kiosks_bp
+from floorplan_routes import bp as floorplan_bp
 
 app = Flask(__name__)
 
-
 # Configuration
 app.config['SECRET_KEY'] = 'your_secret_key'
-app.config['UPLOAD_FOLDER'] = 'uploads'
+# Set absolute path for uploads folder
+app.config['UPLOAD_FOLDER'] = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'uploads')
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max upload size
-app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif', 'pdf'}
+app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif', 'pdf', 'mp4', 'mkv'}  # Added mkv
 
+# Ensure upload directory exists
+if not os.path.exists(app.config['UPLOAD_FOLDER']):
+    os.makedirs(app.config['UPLOAD_FOLDER'])
+
+# SQLAlchemy configuration
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# S3 configuration
+app.config['S3_BUCKET'] = os.environ.get('S3_BUCKET')
+app.config['S3_KEY'] = os.environ.get('S3_KEY')
+app.config['S3_SECRET'] = os.environ.get('S3_SECRET')
+app.config['S3_LOCATION'] = os.environ.get('S3_LOCATION')
+
+# Initialize S3 client
+app.s3 = boto3.client(
+    's3',
+    aws_access_key_id=app.config['S3_KEY'],
+    aws_secret_access_key=app.config['S3_SECRET']
+)
+
+# Initialize SQLAlchemy
+db.init_app(app)
+
+# Register blueprints with URL prefix
+app.register_blueprint(sections_bp, url_prefix='')
+app.register_blueprint(kiosks_bp, url_prefix='')
+app.register_blueprint(home_bp, url_prefix='')
+app.register_blueprint(floorplan_bp, url_prefix='')
 
 # If you're using MySQL
 app.config['MYSQL_HOST'] = 'localhost'
@@ -36,6 +71,7 @@ def get_db_connection():
     return conn
 
 def init_sqlite_db():
+    # Create tables for existing functionality
     conn = get_db_connection()
     conn.execute('''
     CREATE TABLE IF NOT EXISTS floor_plans_and_elevations (
@@ -51,6 +87,10 @@ def init_sqlite_db():
     ''')
     conn.commit()
     conn.close()
+
+    # Create tables for new functionality using SQLAlchemy
+    with app.app_context():
+        db.create_all()
 
 # Initialize SQLite DB
 init_sqlite_db()
@@ -192,4 +232,6 @@ def check_floor_plan_and_elevation():
 if __name__ == '__main__':
     if not os.path.exists('uploads'):
         os.makedirs('uploads')
-    app.run(debug=True)
+    with app.app_context():
+        db.create_all()
+    app.run(host='0.0.0.0', port=5000, debug=True)

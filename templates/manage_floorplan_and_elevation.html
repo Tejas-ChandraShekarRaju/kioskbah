@@ -1,0 +1,715 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary-color: #008080;
+        --secondary-color: #006666;
+        --accent-color: #00b3b3;
+        --text-color: #333;
+        --light-bg: #f8f9fa;
+    }
+
+    .section-header {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        padding: 2rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+    }
+
+    .section-icon {
+        width: 80px;
+        height: 80px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .section-icon i {
+        font-size: 2.5rem;
+        color: white;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    }
+
+    /* Table styles */
+    .table {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .table thead {
+        background-color: var(--light-bg);
+    }
+
+    .table thead th {
+        color: var(--text-color);
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+        border: none;
+        padding: 1rem;
+    }
+
+    .table tbody tr {
+        border-bottom: 1px solid #e0f2f1;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f5f9f9;
+    }
+
+    .table td {
+        padding: 1rem;
+        color: #2c3e50;
+        vertical-align: middle;
+    }
+
+    /* Modal styles */
+    .modal-content {
+        background-color: #2a2a2a;
+        color: #fff;
+    }
+
+    .modal-header {
+        border-bottom: 1px solid #444;
+    }
+
+    .modal-footer {
+        border-top: 1px solid #444;
+    }
+
+    .modal .form-control {
+        background-color: #333;
+        border: 1px solid #444;
+        color: #fff;
+    }
+
+    .modal .form-control:focus {
+        background-color: #333;
+        border-color: var(--primary-color);
+        color: #fff;
+        box-shadow: none;
+    }
+
+    .modal .form-label {
+        color: #fff;
+    }
+
+    .btn-teal {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+    }
+
+    .btn-teal:hover {
+        background-color: var(--secondary-color);
+        color: white;
+    }
+
+    .required-field::after {
+        content: "*";
+        color: red;
+        margin-left: 4px;
+    }
+
+    /* Preview styles */
+    .preview-image {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+    }
+    
+    .preview-pdf {
+        width: 100%;
+        height: 500px;
+        border: 1px solid #444;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        position: relative;
+    }
+    
+    .pdf-container {
+        position: relative;
+    }
+    
+    .pdf-fullscreen-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 5px 10px;
+        cursor: pointer;
+        z-index: 100;
+        transition: background-color 0.3s;
+    }
+    
+    .pdf-fullscreen-btn:hover {
+        background-color: rgba(0, 0, 0, 0.8);
+    }
+    
+    .preview-pdf.fullscreen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw !important;
+        height: 100vh !important;
+        z-index: 9999;
+        border-radius: 0;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Action buttons */
+    .action-btn {
+        margin: 0 0.25rem;
+        min-width: 80px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.375rem 0.75rem;
+    }
+
+    .action-btn i {
+        font-size: 0.875rem;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+        color: white;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+    }
+
+    .btn-info {
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+        color: white;
+    }
+
+    .btn-info:hover {
+        background-color: #138496;
+        border-color: #117a8b;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: white;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Section Header -->
+    <div class="section-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <div class="section-icon">
+                    <i class="fas fa-drafting-compass"></i>
+                </div>
+                <div>
+                    <h1 class="mb-1">Floor Plans & Elevations</h1>
+                    <p class="mb-0">Manage floor plans and elevations</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floor Plans Table -->
+    <div class="card">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="card-title mb-0">Manage Floor Plans</h5>
+                <button class="btn btn-teal" id="addPlanBtn">
+                    <i class="fas fa-plus"></i> Add New Plan
+                </button>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="table-responsive">
+                <table class="table" id="plansTable">
+                    <thead>
+                        <tr>
+                            <th>Site Dimension</th>
+                            <th>Facing</th>
+                            <th>Type</th>
+                            <th>Floors</th>
+                            <th>Created</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for plan in plans %}
+                        <tr>
+                            <td>{{ plan.site_dimension }}</td>
+                            <td>{{ plan.facing }}</td>
+                            <td>{{ plan.type }}</td>
+                            <td>{{ plan.floors }}</td>
+                            <td>{{ plan.created_at.strftime('%Y-%m-%d') }}</td>
+                            <td class="text-end">
+                                <button class="btn btn-sm btn-success action-btn" onclick="viewPlan({{ plan.id }})">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                                <button class="btn btn-sm btn-info action-btn" onclick="editPlan({{ plan.id }})">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button class="btn btn-sm btn-danger action-btn" onclick="deletePlan({{ plan.id }})">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center py-4">
+                                <div class="alert alert-info mb-0">
+                                    No floor plans found. Add your first plan using the button above.
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Plan Modal -->
+<div class="modal fade" id="planModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="planModalLabel">Add New Plan</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="planForm" enctype="multipart/form-data">
+                    <input type="hidden" id="planId" name="planId">
+                    
+                    <div class="mb-3">
+                        <label for="site_dimension" class="form-label required-field">Site Dimension</label>
+                        <select class="form-control" id="site_dimension" name="site_dimension" required>
+                            <option value="">Select Site Dimension</option>
+                            {% for dimension in site_dimensions %}
+                            <option value="{{ dimension }}">{{ dimension }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="facing" class="form-label required-field">Facing</label>
+                        <select class="form-control" id="facing" name="facing" required>
+                            <option value="">Select Facing</option>
+                            {% for facing in facing_options %}
+                            <option value="{{ facing }}">{{ facing }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="type" class="form-label required-field">Type</label>
+                        <select class="form-control" id="type" name="type" required>
+                            <option value="">Select Type</option>
+                            {% for type in plan_types %}
+                            <option value="{{ type }}">{{ type }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="floors" class="form-label required-field">Number of Floors</label>
+                        <select class="form-control" id="floors" name="floors" required>
+                            <option value="">Select Floors</option>
+                            {% for floor in floor_count_options %}
+                            <option value="{{ floor }}">{{ floor }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="file-upload-fields">
+                        <div class="mb-3">
+                            <label for="floor_plan" class="form-label required-field">Floor Plan</label>
+                            <input type="file" class="form-control" id="floor_plan" name="floor_plan" accept="image/*,application/pdf" required>
+                            <small class="text-muted" id="floor-plan-filename"></small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="elevation" class="form-label required-field">Elevation</label>
+                            <input type="file" class="form-control" id="elevation" name="elevation" accept="image/*" required>
+                            <small class="text-muted" id="elevation-filename"></small>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="savePlan">
+                    <i class="fas fa-save"></i> Save Plan
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Preview Modal -->
+<div class="modal fade" id="previewModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="previewModalLabel">Plan Details</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-muted mb-3">Floor Plan</h6>
+                        <div id="preview-floor-plan-container">
+                            <!-- Content will be dynamically added here -->
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-muted mb-3">Elevation</h6>
+                        <div id="preview-elevation-container">
+                            <!-- Content will be dynamically added here -->
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <h6 class="text-muted mb-3">Details</h6>
+                    <table class="table table-dark">
+                        <tr>
+                            <th>Site Dimension:</th>
+                            <td id="preview-dimension"></td>
+                        </tr>
+                        <tr>
+                            <th>Facing:</th>
+                            <td id="preview-facing"></td>
+                        </tr>
+                        <tr>
+                            <th>Type:</th>
+                            <td id="preview-type"></td>
+                        </tr>
+                        <tr>
+                            <th>Number of Floors:</th>
+                            <td id="preview-floors"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let currentPlanId = null;
+let isEditMode = false;
+
+// Initialize modals
+const planModal = new bootstrap.Modal(document.getElementById('planModal'));
+const previewModal = new bootstrap.Modal(document.getElementById('previewModal'));
+
+// Add Plan button click
+document.getElementById('addPlanBtn').addEventListener('click', function() {
+    isEditMode = false;
+    document.getElementById('planModalLabel').textContent = 'Add New Plan';
+    document.getElementById('planForm').reset();
+    document.getElementById('planId').value = '';
+    document.querySelector('.file-upload-fields').style.display = 'block';
+    clearFileNames();
+    planModal.show();
+});
+
+function clearFileNames() {
+    document.getElementById('floor-plan-filename').textContent = '';
+    document.getElementById('elevation-filename').textContent = '';
+}
+
+// Show selected filenames
+document.getElementById('floor_plan').addEventListener('change', function() {
+    const filename = this.files[0] ? this.files[0].name : '';
+    document.getElementById('floor-plan-filename').textContent = filename;
+});
+
+document.getElementById('elevation').addEventListener('change', function() {
+    const filename = this.files[0] ? this.files[0].name : '';
+    document.getElementById('elevation-filename').textContent = filename;
+});
+
+// Save Plan button click
+document.getElementById('savePlan').addEventListener('click', async function() {
+    const saveButton = this;
+    const originalText = saveButton.innerHTML;
+    saveButton.disabled = true;
+    saveButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+    const form = document.getElementById('planForm');
+    const formData = new FormData(form);
+    const planId = document.getElementById('planId').value;
+
+    try {
+        let url = '/api/plans';
+        let method = 'POST';
+
+        if (planId) {
+            url = `/api/plans/${planId}`;
+            method = 'PUT';
+            // Remove file fields from formData when editing
+            formData.delete('floor_plan');
+            formData.delete('elevation');
+        }
+
+        const response = await fetch(url, {
+            method: method,
+            body: formData
+        });
+
+        let result;
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+            result = await response.json();
+        } else {
+            throw new Error('Server returned non-JSON response');
+        }
+        
+        if (response.ok) {
+            // Create and show success alert
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert alert-success alert-dismissible fade show';
+            alertDiv.setAttribute('role', 'alert');
+            alertDiv.innerHTML = `
+                <strong>Success!</strong> ${result.message || 'Plan saved successfully'}
+                <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+            `;
+            
+            // Insert alert at the top of the card body
+            const cardBody = document.querySelector('.card-body');
+            cardBody.insertBefore(alertDiv, cardBody.firstChild);
+            
+            // Auto dismiss after 5 seconds
+            setTimeout(() => {
+                const bsAlert = new bootstrap.Alert(alertDiv);
+                bsAlert.close();
+            }, 3000);
+            
+            // Close modal
+            planModal.hide();
+            
+            // Reload page after a short delay
+            setTimeout(() => {
+                location.reload();
+            }, 500);
+        } else {
+            throw new Error(result.error || `Failed to ${planId ? 'update' : 'save'} plan`);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert(error.message || 'An error occurred');
+    } finally {
+        saveButton.disabled = false;
+        saveButton.innerHTML = originalText;
+    }
+});
+
+async function viewPlan(id) {
+    const btn = document.querySelector(`button[onclick="viewPlan(${id})"]`);
+    try {
+        // Show loading state
+        btn.classList.add('loading');
+        const spinner = document.createElement('span');
+        spinner.className = 'spinner-border spinner-border-sm';
+        spinner.setAttribute('role', 'status');
+        btn.prepend(spinner);
+
+        const response = await fetch(`/api/plans/${id}`);
+        let plan;
+        
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+            plan = await response.json();
+        } else {
+            throw new Error('Server returned non-JSON response');
+        }
+
+        // Update preview modal with plan details
+        document.getElementById('preview-dimension').textContent = plan.site_dimension;
+        document.getElementById('preview-facing').textContent = plan.facing;
+        document.getElementById('preview-type').textContent = plan.type;
+        document.getElementById('preview-floors').textContent = plan.floors;
+        
+        // Check if floor plan is PDF and display appropriately
+        const floorPlanContainer = document.getElementById('preview-floor-plan-container');
+        if (plan.floor_plan_path.toLowerCase().endsWith('.pdf')) {
+            floorPlanContainer.innerHTML = `
+                <object data="${plan.floor_plan_path}" type="application/pdf" width="100%" height="500px" class="preview-pdf">
+                    <p>It appears you don't have a PDF plugin for this browser. 
+                    <a href="${plan.floor_plan_path}" target="_blank">Click here to download the PDF</a>.</p>
+                </object>
+            `;
+        } else {
+            floorPlanContainer.innerHTML = `<img class="preview-image" src="${plan.floor_plan_path}" alt="Floor Plan">`;
+        }
+        
+        // Check if elevation is PDF and display appropriately
+        const elevationContainer = document.getElementById('preview-elevation-container');
+        if (plan.elevation_path.toLowerCase().endsWith('.pdf')) {
+            elevationContainer.innerHTML = `
+                <object data="${plan.elevation_path}" type="application/pdf" width="100%" height="500px" class="preview-pdf">
+                    <p>It appears you don't have a PDF plugin for this browser. 
+                    <a href="${plan.elevation_path}" target="_blank">Click here to download the PDF</a>.</p>
+                </object>
+            `;
+        } else {
+            elevationContainer.innerHTML = `<img class="preview-image" src="${plan.elevation_path}" alt="Elevation">`;
+        }
+
+        previewModal.show();
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Failed to load plan details: ' + error.message);
+    } finally {
+        // Remove loading state
+        btn.classList.remove('loading');
+        const spinner = btn.querySelector('.spinner-border');
+        if (spinner) spinner.remove();
+    }
+}
+
+async function editPlan(id) {
+    isEditMode = true;
+    const btn = document.querySelector(`button[onclick="editPlan(${id})"]`);
+    try {
+        btn.classList.add('loading');
+        const spinner = document.createElement('span');
+        spinner.className = 'spinner-border spinner-border-sm';
+        spinner.setAttribute('role', 'status');
+        btn.prepend(spinner);
+
+        const response = await fetch(`/api/plans/${id}`);
+        const plan = await response.json();
+
+        // Populate form with plan details
+        document.getElementById('planId').value = plan.id;
+        document.getElementById('site_dimension').value = plan.site_dimension;
+        document.getElementById('facing').value = plan.facing;
+        document.getElementById('type').value = plan.type;
+        document.getElementById('floors').value = plan.floors;
+
+        // Hide file upload fields in edit mode
+        document.querySelector('.file-upload-fields').style.display = 'none';
+
+        // Update modal title
+        document.getElementById('planModalLabel').textContent = 'Edit Plan';
+        
+        planModal.show();
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Failed to load plan details');
+    } finally {
+        btn.classList.remove('loading');
+        const spinner = btn.querySelector('.spinner-border');
+        if (spinner) spinner.remove();
+    }
+}
+
+async function deletePlan(id) {
+    if (!confirm('Are you sure you want to delete this plan? This action cannot be undone.')) {
+        return;
+    }
+
+    const btn = document.querySelector(`button[onclick="deletePlan(${id})"]`);
+    try {
+        // Show loading state
+        btn.classList.add('loading');
+        const spinner = document.createElement('span');
+        spinner.className = 'spinner-border spinner-border-sm';
+        spinner.setAttribute('role', 'status');
+        btn.prepend(spinner);
+
+        const response = await fetch(`/api/plans/${id}`, {
+            method: 'DELETE'
+        });
+
+        let result;
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+            result = await response.json();
+        } else {
+            throw new Error('Server returned non-JSON response');
+        }
+
+        if (response.ok) {
+            // Show success message
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert alert-success alert-dismissible fade show';
+            alertDiv.setAttribute('role', 'alert');
+            alertDiv.innerHTML = `
+                <strong>Success!</strong> Plan has been deleted.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+            
+            const cardBody = document.querySelector('.card-body');
+            cardBody.insertBefore(alertDiv, cardBody.firstChild);
+            
+            // Auto dismiss after 5 seconds
+            setTimeout(() => {
+                const bsAlert = new bootstrap.Alert(alertDiv);
+                bsAlert.close();
+            }, 3000);
+            
+            // Remove the row from the table
+            const row = btn.closest('tr');
+            if (row) row.remove();
+            else location.reload();
+        } else {
+            throw new Error(result.error || 'Failed to delete plan');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert(error.message || 'An error occurred while deleting the plan');
+    } finally {
+        // Remove loading state
+        btn.classList.remove('loading');
+        const spinner = btn.querySelector('.spinner-border');
+        if (spinner) spinner.remove();
+    }
+}
+</script>
+{% endblock %} 

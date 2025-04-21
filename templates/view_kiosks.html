@@ -1,0 +1,308 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary-color: #008080;
+        --secondary-color: #006666;
+        --accent-color: #00b3b3;
+        --text-color: #333;
+        --light-bg: #f8f9fa;
+        --dark-bg: #1a1a1a;
+        --card-bg: #2c2c2c;
+        --border-color: #444;
+    }
+
+    .kiosk-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 30px;
+    }
+
+    .kiosk-header {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        padding: 1.5rem;
+        color: white;
+        cursor: pointer;
+    }
+
+    .kiosk-header:hover {
+        background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+    }
+
+    .kiosk-body {
+        padding: 1.5rem;
+        color: #fff;
+    }
+
+    .video-card {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        overflow: hidden;
+    }
+
+    .video-header {
+        background: rgba(0, 0, 0, 0.3);
+        padding: 1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .video-content {
+        padding: 1rem;
+        display: none;
+    }
+
+    .video-content.active {
+        display: block;
+    }
+
+    .button-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .button-card {
+        background: var(--card-bg);
+        border-radius: 6px;
+        padding: 1rem;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .button-card:hover {
+        transform: translateY(-2px);
+    }
+
+    /* Modal styles */
+    .modal-content {
+        background-color: var(--dark-bg);
+        color: #fff;
+    }
+
+    .modal-header {
+        border-bottom: 1px solid var(--border-color);
+        padding: 1.5rem;
+    }
+
+    .modal-body {
+        padding: 2rem;
+    }
+
+    .modal-header .close {
+        color: #fff;
+        text-shadow: none;
+        opacity: 0.5;
+    }
+
+    .modal-header .close:hover {
+        opacity: 1;
+    }
+
+    .media-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    .media-item {
+        position: relative;
+        aspect-ratio: 16/9;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .media-item img,
+    .media-item video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .media-type {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+    }
+
+    .video-preview {
+        width: 100%;
+        max-height: 300px;
+        object-fit: cover;
+        border-radius: 4px;
+        margin: 1rem 0;
+    }
+
+    .chevron {
+        transition: transform 0.3s;
+    }
+
+    .chevron.rotated {
+        transform: rotate(180deg);
+    }
+
+    .button-title {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+        color: var(--accent-color);
+    }
+
+    .timestamp {
+        font-size: 0.8rem;
+        color: #888;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        {% for kiosk in kiosks %}
+        <div class="col-12">
+            <div class="kiosk-card">
+                <div class="kiosk-header" onclick="toggleKiosk({{ kiosk.id }})">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">{{ kiosk.title }}</h4>
+                        <i class="fas fa-chevron-down chevron" id="kiosk-chevron-{{ kiosk.id }}"></i>
+                    </div>
+                    <small>Created: {{ kiosk.created_at.strftime('%Y-%m-%d') }}</small>
+                </div>
+                <div class="kiosk-body" id="kiosk-content-{{ kiosk.id }}" style="display: none;">
+                    <p class="text-muted">{{ kiosk.description }}</p>
+                    
+                    {% for video in kiosk.videos %}
+                    <div class="video-card">
+                        <div class="video-header" onclick="toggleVideo({{ video.id }})">
+                            <div>
+                                <h5 class="mb-0">{{ video.title }}</h5>
+                                <small class="text-muted">{{ video.created_at.strftime('%Y-%m-%d') }}</small>
+                            </div>
+                            <i class="fas fa-chevron-down chevron" id="video-chevron-{{ video.id }}"></i>
+                        </div>
+                        <div class="video-content" id="video-content-{{ video.id }}">
+                            <video class="video-preview" src="{{ video.file_path }}" controls></video>
+                            <p class="text-muted">{{ video.description }}</p>
+                            
+                            <h6 class="mt-4 mb-3">Interactive Buttons</h6>
+                            <div class="button-grid">
+                                {% for button in video.buttons %}
+                                <div class="button-card" onclick="viewButtonMedia({{ button.id }})">
+                                    <h6 class="button-title">{{ button.title }}</h6>
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-images me-2"></i>
+                                        <span class="media-count">{{ button.media_items|length }} items</span>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Button Media Modal -->
+<div class="modal fade" id="buttonMediaModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="buttonMediaModalLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="media-grid" id="buttonMediaGrid"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function toggleKiosk(kioskId) {
+        const content = document.getElementById(`kiosk-content-${kioskId}`);
+        const chevron = document.getElementById(`kiosk-chevron-${kioskId}`);
+        
+        if (content.style.display === 'none') {
+            content.style.display = 'block';
+            chevron.classList.add('rotated');
+        } else {
+            content.style.display = 'none';
+            chevron.classList.remove('rotated');
+        }
+    }
+
+    function toggleVideo(videoId) {
+        const content = document.getElementById(`video-content-${videoId}`);
+        const chevron = document.getElementById(`video-chevron-${videoId}`);
+        
+        if (!content.classList.contains('active')) {
+            content.classList.add('active');
+            chevron.classList.add('rotated');
+        } else {
+            content.classList.remove('active');
+            chevron.classList.remove('rotated');
+        }
+    }
+
+    async function viewButtonMedia(buttonId) {
+        try {
+            const response = await fetch(`/api/buttons/${buttonId}/media`);
+            const data = await response.json();
+            
+            const button = data.button;
+            const mediaItems = data.media_items;
+
+            document.getElementById('buttonMediaModalLabel').textContent = button.title;
+            const mediaGrid = document.getElementById('buttonMediaGrid');
+            mediaGrid.innerHTML = '';
+
+            mediaItems.forEach(media => {
+                const div = document.createElement('div');
+                div.className = 'media-item';
+                
+                if (media.type === 'image') {
+                    div.innerHTML = `
+                        <img src="${media.file_path}" alt="${media.title}">
+                        <div class="media-type">
+                            <i class="fas fa-image me-1"></i> Image
+                        </div>
+                    `;
+                } else if (media.type === 'video') {
+                    div.innerHTML = `
+                        <video src="${media.file_path}" controls></video>
+                        <div class="media-type">
+                            <i class="fas fa-video me-1"></i> Video
+                        </div>
+                    `;
+                }
+                
+                mediaGrid.appendChild(div);
+            });
+
+            $('#buttonMediaModal').modal('show');
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to load button media');
+        }
+    }
+</script>
+{% endblock %} 

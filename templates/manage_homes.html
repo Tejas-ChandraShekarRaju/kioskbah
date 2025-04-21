@@ -1,0 +1,940 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary-color: #008080;
+        --secondary-color: #006666;
+        --accent-color: #00b3b3;
+        --text-color: #333;
+        --light-bg: #f8f9fa;
+    }
+
+    .section-header {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        padding: 2rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+    }
+
+    .section-icon {
+        width: 80px;
+        height: 80px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .section-icon i {
+        font-size: 2.5rem;
+        color: white;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    }
+
+    /* Table styles */
+    .table {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .table thead {
+        background-color: var(--light-bg);
+    }
+
+    .table thead th {
+        color: var(--text-color);
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+        border: none;
+        padding: 1rem;
+    }
+
+    .table tbody tr {
+        border-bottom: 1px solid #e0f2f1;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f5f9f9;
+    }
+
+    .table td {
+        padding: 1rem;
+        color: #2c3e50;
+        vertical-align: middle;
+    }
+
+    /* Modal styles */
+    .modal-content {
+        background-color: #2a2a2a;
+        color: #fff;
+    }
+
+    .modal-header {
+        border-bottom: 1px solid #444;
+    }
+
+    .modal-footer {
+        border-top: 1px solid #444;
+    }
+
+    .modal .form-control {
+        background-color: #333;
+        border: 1px solid #444;
+        color: #fff;
+    }
+
+    .modal .form-control:focus {
+        background-color: #333;
+        border-color: var(--primary-color);
+        color: #fff;
+        box-shadow: none;
+    }
+
+    .modal .form-label {
+        color: #fff;
+    }
+
+    .btn-teal {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+    }
+
+    .btn-teal:hover {
+        background-color: var(--secondary-color);
+        color: white;
+    }
+
+    .required-field::after {
+        content: "*";
+        color: red;
+        margin-left: 4px;
+    }
+
+    /* Media grid styles */
+    .media-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+        margin-top: 1rem;
+        padding: 1rem;
+    }
+
+    .media-item {
+        background: #333;
+        border-radius: 8px;
+        overflow: hidden;
+        position: relative;
+        aspect-ratio: 16/9;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s ease;
+    }
+
+    .media-item:hover {
+        transform: translateY(-2px);
+    }
+
+    .media-item img,
+    .media-item video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .media-item .media-info {
+        padding: 0.75rem;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+        color: white;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+
+    .media-item .media-type {
+        position: absolute;
+        top: 0.75rem;
+        right: 0.75rem;
+        background: rgba(0, 0, 0, 0.6);
+        color: white;
+        padding: 0.35rem 0.75rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        backdrop-filter: blur(4px);
+    }
+
+    /* File list styles */
+    .file-list {
+        margin-top: 1rem;
+        background: #333;
+        border-radius: 4px;
+        padding: 0.5rem;
+    }
+
+    .file-item {
+        display: flex;
+        align-items: center;
+        padding: 0.5rem;
+        border-bottom: 1px solid #444;
+    }
+
+    .file-item:last-child {
+        border-bottom: none;
+    }
+
+    .file-item .file-icon {
+        margin-right: 0.5rem;
+    }
+
+    .file-item .file-name {
+        flex-grow: 1;
+        color: white;
+    }
+
+    /* Spinner styles */
+    .spinner-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+
+    .spinner-content {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    .spinner-border {
+        width: 3rem;
+        height: 3rem;
+    }
+
+    /* Action buttons */
+    .action-btn {
+        margin: 0 0.25rem;
+        min-width: 80px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.375rem 0.75rem;
+    }
+
+    .action-btn i {
+        font-size: 0.875rem;
+    }
+
+    .action-btn .spinner-border {
+        width: 1rem;
+        height: 1rem;
+        margin-right: 0.5rem;
+        display: none;
+    }
+
+    .action-btn.loading {
+        pointer-events: none;
+        opacity: 0.8;
+    }
+
+    .action-btn.loading .spinner-border {
+        display: inline-block;
+    }
+
+    .action-btn.loading i {
+        display: none;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+        color: white;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+    }
+
+    .btn-info {
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+        color: white;
+    }
+
+    .btn-info:hover {
+        background-color: #138496;
+        border-color: #117a8b;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: white;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+
+    /* Preview Modal styles */
+    .modal-xl {
+        max-width: 1400px;
+    }
+
+    .modal-xl .modal-body {
+        padding: 1.5rem;
+    }
+
+    .modal-xl .modal-header {
+        padding: 1.25rem 1.5rem;
+        background: #1a1a1a;
+    }
+
+    .modal-xl .modal-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+
+    .modal-xl .description-section {
+        background: #1a1a1a;
+        padding: 1.5rem;
+        margin-top: 1.5rem;
+        border-radius: 8px;
+    }
+
+    .modal-xl .description-section h6 {
+        color: #888;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 1rem;
+    }
+
+    .modal-xl .description-section p {
+        color: #fff;
+        font-size: 1rem;
+        line-height: 1.6;
+        margin-bottom: 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Section Header -->
+    <div class="section-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <div class="section-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <div>
+                    <h1 class="mb-1">Our Homes</h1>
+                    <p class="mb-0">Manage home listings</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Homes Table -->
+    <div class="card">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="card-title mb-0">Manage Homes</h5>
+                <button class="btn btn-teal" id="addHomeBtn">
+                    <i class="fas fa-plus"></i> Add New Home
+                </button>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="table-responsive">
+                <table class="table" id="homesTable">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Created</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for home in homes %}
+                        <tr>
+                            <td>{{ home.title }}</td>
+                            <td>{{ home.description|truncate(100) }}</td>
+                            <td>{{ home.created_at.strftime('%Y-%m-%d') }}</td>
+                            <td class="text-end">
+                                <button class="btn btn-sm btn-success action-btn" onclick="viewHome({{ home.id }})">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                                <button class="btn btn-sm btn-info action-btn" onclick="editHome({{ home.id }})">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button class="btn btn-sm btn-danger action-btn" onclick="deleteHome({{ home.id }})">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center py-4">
+                                <div class="alert alert-info mb-0">
+                                    No homes found. Add your first home using the button above.
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Home Modal -->
+<div class="modal fade" id="homeModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="homeModalLabel">Add New Home</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="homeForm" enctype="multipart/form-data">
+                    <input type="hidden" id="homeId" name="homeId">
+                    <div class="mb-3">
+                        <label for="title" class="form-label required-field">Title</label>
+                        <input type="text" class="form-control" id="title" name="title" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="4"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="photos" class="form-label required-field">Photos</label>
+                        <input type="file" class="form-control" id="photos" name="photos" accept="image/*" multiple required>
+                        <div id="photos-list" class="file-list"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="floor_plan" class="form-label required-field">Floor Plan</label>
+                        <input type="file" class="form-control" id="floor_plan" name="floor_plan" accept="image/*" required>
+                        <div id="floor-plan-list" class="file-list"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="isometric" class="form-label required-field">Isometric View</label>
+                        <input type="file" class="form-control" id="isometric" name="isometric" accept="image/*" required>
+                        <div id="isometric-list" class="file-list"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="video" class="form-label">Video (Optional)</label>
+                        <input type="file" class="form-control" id="video" name="video" accept="video/*">
+                        <div id="video-list" class="file-list"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="saveHome">
+                    <i class="fas fa-save"></i> Save Home
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Preview Modal -->
+<div class="modal fade" id="previewModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="previewModalLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="media-grid" id="mediaGrid">
+                    <!-- Media items will be inserted here -->
+                </div>
+                <div class="description-section">
+                    <h6>Description</h6>
+                    <p id="previewDescription"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Spinner Overlay -->
+<div class="spinner-overlay" id="spinnerOverlay">
+    <div class="spinner-content">
+        <div class="spinner-border text-primary mb-3" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <h5 class="text-dark mb-0">Uploading Home...</h5>
+        <p class="text-muted small mb-0">Please wait while we upload your files</p>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+let currentHomeId = null;
+
+// Initialize modals using jQuery for Bootstrap 4
+const $homeModal = $('#homeModal');
+const $previewModal = $('#previewModal');
+const $spinnerOverlay = $('#spinnerOverlay');
+
+// Function to show/hide spinner
+function toggleSpinner(show) {
+    $spinnerOverlay.toggle(show);
+}
+
+// Add Home button click
+$('#addHomeBtn').on('click', function() {
+    $('#homeModalLabel').text('Add New Home');
+    $('#homeForm')[0].reset();
+    $('#homeId').val('');
+    clearFileLists();
+    $homeModal.modal('show');
+});
+
+function clearFileLists() {
+    document.getElementById('photos-list').innerHTML = '';
+    document.getElementById('floor-plan-list').innerHTML = '';
+    document.getElementById('isometric-list').innerHTML = '';
+    document.getElementById('video-list').innerHTML = '';
+}
+
+function updateFileList(input) {
+    const listId = `${input.id}-list`;
+    const fileList = document.getElementById(listId);
+    fileList.innerHTML = '';
+
+    Array.from(input.files).forEach(file => {
+        const fileItem = document.createElement('div');
+        fileItem.className = 'file-item';
+        fileItem.innerHTML = `
+            <i class="fas ${file.type.startsWith('image/') ? 'fa-image' : 'fa-video'} file-icon"></i>
+            <span class="file-name">${file.name}</span>
+        `;
+        fileList.appendChild(fileItem);
+    });
+}
+
+// Add file input listeners
+['photos', 'floor_plan', 'isometric', 'video'].forEach(id => {
+    const input = document.getElementById(id);
+    if (input) {
+        input.addEventListener('change', () => updateFileList(input));
+    }
+});
+
+// Save home
+document.getElementById('saveHome').addEventListener('click', async function() {
+    const saveButton = this;
+    const originalText = saveButton.innerHTML;
+    const form = document.getElementById('homeForm');
+    const formData = new FormData(form);
+    const homeId = document.getElementById('homeId').value;
+    
+    try {
+        // Show loading state
+        saveButton.disabled = true;
+        saveButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+
+        const response = await fetch(homeId ? `/api/homes/${homeId}` : '/api/homes', {
+            method: homeId ? 'PUT' : 'POST',
+            body: formData
+        });
+
+        let result;
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+            result = await response.json();
+        } else {
+            throw new Error('Server returned non-JSON response');
+        }
+        
+        if (response.ok) {
+            // Create and show success alert
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert alert-success alert-dismissible fade show';
+            alertDiv.setAttribute('role', 'alert');
+            alertDiv.innerHTML = `
+                <strong>Success!</strong> ${result.message || 'Home saved successfully'}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+            
+            // Insert alert at the top of the card body
+            const cardBody = document.querySelector('.card-body');
+            cardBody.insertBefore(alertDiv, cardBody.firstChild);
+            
+            // Auto dismiss after 5 seconds
+            setTimeout(() => {
+                const bsAlert = new bootstrap.Alert(alertDiv);
+                bsAlert.close();
+            }, 5000);
+            
+            // Close modal
+            $homeModal.modal('hide');
+            
+            // Reload page after a short delay
+            setTimeout(() => {
+                location.reload();
+            }, 500);
+        } else {
+            throw new Error(result.error || `Failed to ${homeId ? 'update' : 'save'} home`);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert(error.message || 'An error occurred');
+    } finally {
+        // Restore button state
+        saveButton.disabled = false;
+        saveButton.innerHTML = originalText;
+    }
+});
+
+async function viewHome(id) {
+    const btn = document.querySelector(`button[onclick="viewHome(${id})"]`);
+    try {
+        // Show loading state
+        btn.classList.add('loading');
+        const spinner = document.createElement('span');
+        spinner.className = 'spinner-border spinner-border-sm';
+        spinner.setAttribute('role', 'status');
+        btn.prepend(spinner);
+
+        const response = await fetch(`/api/homes/${id}`);
+        let home;
+        
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+            home = await response.json();
+        } else {
+            throw new Error('Server returned non-JSON response');
+        }
+        
+        document.getElementById('previewModalLabel').textContent = home.title;
+        document.getElementById('previewDescription').textContent = home.description || 'No description available';
+
+        // Setup media grid
+        const mediaGrid = document.getElementById('mediaGrid');
+        mediaGrid.innerHTML = '';
+        
+        // Add photos
+        const photos = home.media_items.filter(m => m.media_type === 'photo');
+        photos.forEach(photo => {
+            const div = document.createElement('div');
+            div.className = 'media-item';
+            div.innerHTML = `
+                <img src="${photo.file_path}" alt="Photo">
+                <div class="media-type">
+                    <i class="fas fa-image me-1"></i> Photo
+                </div>
+            `;
+            mediaGrid.appendChild(div);
+        });
+
+        // Add floor plan
+        const floorPlan = home.media_items.find(m => m.media_type === 'floor_plan');
+        if (floorPlan) {
+            const div = document.createElement('div');
+            div.className = 'media-item';
+            div.innerHTML = `
+                <img src="${floorPlan.file_path}" alt="Floor Plan">
+                <div class="media-type">
+                    <i class="fas fa-blueprint me-1"></i> Floor Plan
+                </div>
+            `;
+            mediaGrid.appendChild(div);
+        }
+
+        // Add isometric view
+        const isometric = home.media_items.find(m => m.media_type === 'isometric');
+        if (isometric) {
+            const div = document.createElement('div');
+            div.className = 'media-item';
+            div.innerHTML = `
+                <img src="${isometric.file_path}" alt="Isometric View">
+                <div class="media-type">
+                    <i class="fas fa-cube me-1"></i> Isometric
+                </div>
+            `;
+            mediaGrid.appendChild(div);
+        }
+
+        // Add video
+        const video = home.media_items.find(m => m.media_type === 'video');
+        if (video) {
+            const div = document.createElement('div');
+            div.className = 'media-item';
+            div.innerHTML = `
+                <video src="${video.file_path}" controls></video>
+                <div class="media-type">
+                    <i class="fas fa-video me-1"></i> Video
+                </div>
+            `;
+            mediaGrid.appendChild(div);
+        }
+
+        $previewModal.modal('show');
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Failed to load home details: ' + error.message);
+    } finally {
+        // Remove loading state
+        btn.classList.remove('loading');
+        const spinner = btn.querySelector('.spinner-border');
+        if (spinner) spinner.remove();
+    }
+}
+
+async function editHome(id) {
+    const btn = document.querySelector(`button[onclick="editHome(${id})"]`);
+    try {
+        // Show loading state
+        btn.classList.add('loading');
+        const spinner = document.createElement('span');
+        spinner.className = 'spinner-border spinner-border-sm';
+        spinner.setAttribute('role', 'status');
+        btn.prepend(spinner);
+
+        const response = await fetch(`/api/homes/${id}`);
+        const home = await response.json();
+        
+        // Create a simplified edit modal dynamically
+        const modalContent = `
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Home Details</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editHomeForm">
+                            <input type="hidden" id="edit-home-id" value="${home.id}">
+                            <div class="mb-3">
+                                <label for="edit-title" class="form-label required-field">Title</label>
+                                <input type="text" class="form-control" id="edit-title" value="${home.title}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit-description" class="form-label">Description</label>
+                                <textarea class="form-control" id="edit-description" rows="4">${home.description || ''}</textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" onclick="updateHomeDetails(${home.id})">Save Changes</button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Create and show the modal
+        const editModal = document.createElement('div');
+        editModal.className = 'modal fade';
+        editModal.id = 'editHomeModal';
+        editModal.innerHTML = modalContent;
+        document.body.appendChild(editModal);
+
+        const bsModal = new bootstrap.Modal(editModal);
+        bsModal.show();
+
+        // Clean up modal when hidden
+        editModal.addEventListener('hidden.bs.modal', function () {
+            document.body.removeChild(editModal);
+        });
+
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Failed to load home details');
+    } finally {
+        // Remove loading state
+        btn.classList.remove('loading');
+        const spinner = btn.querySelector('.spinner-border');
+        if (spinner) spinner.remove();
+    }
+}
+
+async function updateHomeDetails(id) {
+    const btn = document.querySelector(`button[onclick="updateHomeDetails(${id})"]`);
+    try {
+        // Show loading state
+        btn.classList.add('loading');
+        const spinner = document.createElement('span');
+        spinner.className = 'spinner-border spinner-border-sm';
+        spinner.setAttribute('role', 'status');
+        btn.prepend(spinner);
+
+        const title = document.getElementById('edit-title').value;
+        const description = document.getElementById('edit-description').value;
+
+        const response = await fetch(`/api/homes/${id}/details`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                title: title,
+                description: description
+            })
+        });
+
+        let result;
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+            result = await response.json();
+        } else {
+            throw new Error('Server returned non-JSON response');
+        }
+
+        if (response.ok) {
+            // Close modal using jQuery
+            $('#editHomeModal').modal('hide');
+            
+            // Show success message
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert alert-success alert-dismissible fade show';
+            alertDiv.setAttribute('role', 'alert');
+            alertDiv.innerHTML = `
+                <strong>Success!</strong> Home details updated successfully.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            `;
+            
+            const cardBody = document.querySelector('.card-body');
+            cardBody.insertBefore(alertDiv, cardBody.firstChild);
+            
+            // Remove the modal from DOM after it's hidden
+            $('#editHomeModal').on('hidden.bs.modal', function (e) {
+                $(this).remove();
+            });
+            
+            // Reload page after a short delay
+            setTimeout(() => {
+                location.reload();
+            }, 500);
+        } else {
+            throw new Error(result.error || 'Failed to update home details');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert(error.message || 'An error occurred while updating home details');
+    } finally {
+        // Remove loading state
+        btn.classList.remove('loading');
+        const spinner = btn.querySelector('.spinner-border');
+        if (spinner) spinner.remove();
+    }
+}
+
+async function deleteHome(id) {
+    if (!confirm('Are you sure you want to delete this home? This action cannot be undone and will delete all associated media files.')) {
+        return;
+    }
+
+    const btn = document.querySelector(`button[onclick="deleteHome(${id})"]`);
+    try {
+        // Show loading state
+        btn.classList.add('loading');
+        const spinner = document.createElement('span');
+        spinner.className = 'spinner-border spinner-border-sm';
+        spinner.setAttribute('role', 'status');
+        btn.prepend(spinner);
+
+        const response = await fetch(`/api/homes/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                cleanup_s3: true
+            })
+        });
+
+        let result;
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+            result = await response.json();
+        } else {
+            throw new Error('Server returned non-JSON response');
+        }
+
+        if (response.ok) {
+            // Show success message
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert alert-success alert-dismissible fade show';
+            alertDiv.setAttribute('role', 'alert');
+            alertDiv.innerHTML = `
+                <strong>Success!</strong> Home and all associated files have been deleted.
+                <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+            `;
+            
+            const cardBody = document.querySelector('.card-body');
+            cardBody.insertBefore(alertDiv, cardBody.firstChild);
+            
+            // Remove the row from the table
+            const row = document.querySelector(`tr[data-home-id="${id}"]`);
+            if (row) row.remove();
+            else location.reload();
+        } else {
+            throw new Error(result.error || 'Failed to delete home');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert(error.message || 'An error occurred while deleting the home');
+    } finally {
+        // Remove loading state
+        btn.classList.remove('loading');
+        const spinner = btn.querySelector('.spinner-border');
+        if (spinner) spinner.remove();
+    }
+}
+</script>
+{% endblock %} 

@@ -6,6 +6,6 @@ venv/
 
 kioskvenv/
 
-uploads_1/*
+uploads/*
 
 database.db

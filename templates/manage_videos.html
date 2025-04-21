@@ -1,0 +1,589 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary-color: #008080;
+        --secondary-color: #006666;
+        --accent-color: #00b3b3;
+        --text-color: #333;
+        --light-bg: #f8f9fa;
+    }
+
+    .kiosk-header {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        padding: 2rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+    }
+
+    .kiosk-icon {
+        width: 80px;
+        height: 80px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .kiosk-icon i {
+        font-size: 2.5rem;
+        color: white;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    }
+
+    /* Table styles */
+    .table {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .table thead {
+        background-color: var(--light-bg);
+    }
+
+    .table thead th {
+        color: var(--text-color);
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+        border: none;
+        padding: 1rem;
+    }
+
+    .table tbody tr {
+        border-bottom: 1px solid #e0f2f1;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f5f9f9;
+    }
+
+    .table td {
+        padding: 1rem;
+        color: #2c3e50;
+        vertical-align: middle;
+    }
+
+    .video-preview {
+        width: 120px;
+        height: 68px;
+        object-fit: cover;
+        border-radius: 4px;
+        background-color: #000;
+    }
+
+    .btn-teal {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+    }
+
+    .btn-teal:hover {
+        background-color: var(--secondary-color);
+        color: white;
+    }
+
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(0, 128, 128, 0.25);
+    }
+
+    .btn-info {
+        background-color: var(--accent-color);
+        color: white;
+        border: none;
+    }
+
+    .btn-info:hover {
+        background-color: var(--secondary-color);
+        color: white;
+    }
+
+    /* Modal styles */
+    .modal-content {
+        background-color: #2a2a2a;
+        color: #fff;
+    }
+
+    .modal-header {
+        border-bottom: 1px solid #444;
+    }
+
+    .modal-footer {
+        border-top: 1px solid #444;
+    }
+
+    .btn-close {
+        filter: invert(1) grayscale(100%) brightness(200%);
+    }
+
+    .modal .form-control {
+        background-color: #333;
+        border: 1px solid #444;
+        color: #fff;
+    }
+
+    .modal .form-control:focus {
+        background-color: #333;
+        border-color: var(--primary-color);
+        color: #fff;
+        box-shadow: none;
+    }
+
+    .modal .form-label {
+        color: #fff;
+    }
+
+    .btn-secondary {
+        background-color: #444;
+        border: none;
+    }
+
+    .btn-secondary:hover {
+        background-color: #555;
+    }
+
+    .modal .btn-primary {
+        background-color: var(--primary-color);
+        border: none;
+    }
+
+    .modal .btn-primary:hover {
+        background-color: var(--secondary-color);
+    }
+
+    /* Video upload preview */
+    .upload-preview {
+        max-width: 100%;
+        max-height: 200px;
+        margin-top: 1rem;
+        border-radius: 5px;
+    }
+
+    .upload-preview video {
+        width: 100%;
+        border-radius: 5px;
+    }
+
+    .modal-header .close {
+        color: #fff;
+        text-shadow: none;
+        opacity: 0.5;
+    }
+
+    .modal-header .close:hover {
+        color: #fff;
+        opacity: 1;
+    }
+
+    .modal-header .close span {
+        font-size: 1.5rem;
+        font-weight: 700;
+        line-height: 1;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Kiosk Header -->
+    <div class="kiosk-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <div class="kiosk-icon">
+                    <i class="fas fa-video"></i>
+                </div>
+                <div>
+                    <h1 class="mb-1">{{ kiosk.title }}</h1>
+                    <p class="mb-0">{{ kiosk.description }}</p>
+                </div>
+            </div>
+            <a href="{{ url_for('kiosks.manage_kiosks') }}" class="btn btn-outline-light">
+                <i class="fas fa-arrow-left"></i> Back to Kiosks
+            </a>
+        </div>
+    </div>
+
+    <!-- Videos Table -->
+    <div class="card">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="card-title mb-0">Videos</h5>
+                <button class="btn btn-teal" id="uploadVideoBtn">
+                    <i class="fas fa-upload"></i> Upload Video
+                </button>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Created</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="videoTableBody">
+                        {% for video in videos %}
+                        <tr>
+                            <td class="fw-medium">{{ video.title }}</td>
+                            <td>
+                                <div class="text-wrap" style="max-width: 300px;">
+                                    {{ video.description }}
+                                </div>
+                            </td>
+                            <td>{{ video.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                            <td class="text-end">
+                                <button class="btn btn-sm btn-primary preview-video me-2" data-id="{{ video.id }}" data-path="{{ url_for('static', filename=video.file_path) }}">
+                                    <i class="fas fa-play"></i> Preview
+                                </button>
+                                <button class="btn btn-sm btn-info edit-video me-2" data-id="{{ video.id }}" data-title="{{ video.title }}" data-description="{{ video.description }}">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <a href="{{ url_for('kiosks.manage_buttons', video_id=video.id) }}" class="btn btn-sm btn-success me-2">
+                                    <i class="fas fa-th"></i> Manage Buttons
+                                </a>
+                                <button class="btn btn-sm btn-danger delete-video" data-id="{{ video.id }}">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center py-4">
+                                <div class="alert alert-info mb-0">
+                                    No videos found. Upload your first video using the button above.
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function createUploadVideoModal() {
+        const modal = document.createElement('div');
+        modal.className = 'modal fade';
+        modal.setAttribute('id', 'uploadVideoModal');
+        modal.setAttribute('tabindex', '-1');
+        modal.setAttribute('aria-hidden', 'true');
+
+        modal.innerHTML = `
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Upload New Video</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="uploadVideoForm" enctype="multipart/form-data">
+                            <input type="hidden" name="kiosk_id" value="{{ kiosk.id }}">
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Title</label>
+                                <input type="text" class="form-control" id="title" name="title" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="video" class="form-label">Select Video</label>
+                                <input type="file" class="form-control" id="video" name="video" accept="video/*" required>
+                            </div>
+                            <div id="videoPreview" class="mt-3">
+                                <!-- Video preview will be shown here -->
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="saveNewVideo">Upload</button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(modal);
+        return modal;
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Handle Upload Video button click
+        const uploadVideoBtn = document.getElementById('uploadVideoBtn');
+        let uploadVideoModal = null;
+
+        uploadVideoBtn.addEventListener('click', function () {
+            if (uploadVideoModal) {
+                uploadVideoModal.remove();
+            }
+            uploadVideoModal = createUploadVideoModal();
+            const modalInstance = new bootstrap.Modal(uploadVideoModal);
+            modalInstance.show();
+
+            // Set up video preview
+            const videoInput = document.getElementById('video');
+            const previewContainer = document.getElementById('videoPreview');
+
+            videoInput.addEventListener('change', function () {
+                previewContainer.innerHTML = '';
+                const file = this.files[0];
+                
+                if (file) {
+                    const item = document.createElement('div');
+                    item.className = 'list-group-item d-flex justify-content-between align-items-center bg-dark text-white border-secondary';
+                    
+                    const fileSize = (file.size / (1024 * 1024)).toFixed(2);
+                    item.innerHTML = `
+                        <div>
+                            <i class="fas fa-video me-2"></i>
+                            ${file.name}
+                        </div>
+                        <span class="badge bg-secondary">${fileSize} MB</span>
+                    `;
+                    previewContainer.appendChild(item);
+                }
+            });
+
+            // Handle save
+            document.getElementById('saveNewVideo').addEventListener('click', function () {
+                const form = document.getElementById('uploadVideoForm');
+                const formData = new FormData(form);
+
+                // Show loading state
+                const saveButton = this;
+                const originalText = saveButton.innerHTML;
+                saveButton.disabled = true;
+                saveButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+
+                fetch('/api/videos', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(data => {
+                                throw new Error(data.error || 'Failed to upload video');
+                            });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Create and show success alert
+                        const alertDiv = document.createElement('div');
+                        alertDiv.className = 'alert alert-success alert-dismissible fade show';
+                        alertDiv.setAttribute('role', 'alert');
+                        alertDiv.innerHTML = `
+                            <strong>Success!</strong> ${data.message}
+                            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+                        `;
+                        
+                        // Insert alert at the top of the card body
+                        const cardBody = document.querySelector('.card-body');
+                        cardBody.insertBefore(alertDiv, cardBody.firstChild);
+                        
+                        // Auto dismiss after 5 seconds
+                        setTimeout(() => {
+                            const bsAlert = new bootstrap.Alert(alertDiv);
+                            bsAlert.close();
+                        }, 5000);
+                        
+                        // Close modal using the existing modalInstance
+                        modalInstance.hide();
+                        
+                        // Refresh the page after a short delay
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 500);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert(error.message || 'An error occurred while uploading the video');
+                    })
+                    .finally(() => {
+                        // Restore button state
+                        saveButton.disabled = false;
+                        saveButton.innerHTML = originalText;
+                    });
+            });
+
+            // Handle modal hidden event
+            uploadVideoModal.addEventListener('hidden.bs.modal', function () {
+                this.remove();
+                uploadVideoModal = null;
+            });
+        });
+
+        // Handle video preview
+        document.querySelectorAll('.preview-video').forEach(button => {
+            button.addEventListener('click', function () {
+                const videoId = this.dataset.id;
+
+                fetch(`/api/videos/${videoId}/preview`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const modal = document.createElement('div');
+                        modal.className = 'modal fade';
+                        modal.setAttribute('id', 'previewModal');
+                        modal.setAttribute('tabindex', '-1');
+                        modal.setAttribute('aria-hidden', 'true');
+
+                        modal.innerHTML = `
+                            <div class="modal-dialog modal-lg modal-dialog-centered">
+                                <div class="modal-content bg-dark">
+                                    <div class="modal-header border-0">
+                                        <h5 class="modal-title text-white">${data.title}</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body text-center p-0">
+                                        <video controls class="img-fluid" style="max-height: 80vh;">
+                                            <source src="${data.file_path}" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </div>
+                                    <div class="modal-footer border-0">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+
+                        document.body.appendChild(modal);
+                        const modalInstance = new bootstrap.Modal(modal);
+                        modalInstance.show();
+
+                        modal.addEventListener('hidden.bs.modal', function () {
+                            this.remove();
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Failed to load video preview');
+                    });
+            });
+        });
+
+        // Handle video deletion
+        document.querySelectorAll('.delete-video').forEach(button => {
+            button.addEventListener('click', async function () {
+                if (!confirm('Are you sure you want to delete this video?')) {
+                    return;
+                }
+
+                const videoId = this.dataset.id;
+
+                try {
+                    const response = await fetch(`/api/videos/${videoId}`, {
+                        method: 'DELETE'
+                    });
+
+                    if (response.ok) {
+                        window.location.reload();
+                    } else {
+                        const data = await response.json();
+                        alert(data.error || 'Failed to delete video');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('An error occurred while deleting the video');
+                }
+            });
+        });
+
+        // Handle video edit
+        document.querySelectorAll('.edit-video').forEach(button => {
+            button.addEventListener('click', function () {
+                const videoId = this.dataset.id;
+                const videoTitle = this.dataset.title;
+                const videoDescription = this.dataset.description;
+
+                const modal = document.createElement('div');
+                modal.className = 'modal fade';
+                modal.setAttribute('id', 'editModal');
+                modal.setAttribute('tabindex', '-1');
+                modal.setAttribute('aria-hidden', 'true');
+
+                modal.innerHTML = `
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Edit Video</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="editVideoForm">
+                                    <div class="mb-3">
+                                        <label for="edit_title" class="form-label">Title</label>
+                                        <input type="text" class="form-control" id="edit_title" value="${videoTitle}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="edit_description" class="form-label">Description</label>
+                                        <textarea class="form-control" id="edit_description" rows="3">${videoDescription}</textarea>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-primary" id="saveEdit">Save Changes</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                document.body.appendChild(modal);
+                const modalInstance = new bootstrap.Modal(modal);
+                modalInstance.show();
+
+                document.getElementById('saveEdit').addEventListener('click', async function () {
+                    const title = document.getElementById('edit_title').value;
+                    const description = document.getElementById('edit_description').value;
+
+                    try {
+                        const response = await fetch(`/api/videos/${videoId}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ title, description })
+                        });
+
+                        if (response.ok) {
+                            modalInstance.hide();
+                            window.location.reload();
+                        } else {
+                            const data = await response.json();
+                            alert(data.error || 'Failed to update video');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert('An error occurred while updating the video');
+                    }
+                });
+
+                modal.addEventListener('hidden.bs.modal', function () {
+                    this.remove();
+                });
+            });
+        });
+    });
+</script>
+{% endblock %} 

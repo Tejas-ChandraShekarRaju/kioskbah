@@ -1,0 +1,655 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary-color: #008080;
+        --secondary-color: #006666;
+        --accent-color: #00b3b3;
+        --text-color: #333;
+        --light-bg: #f8f9fa;
+    }
+
+    .kiosk-header {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        padding: 2rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+    }
+
+    .kiosk-icon {
+        width: 80px;
+        height: 80px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .kiosk-icon i {
+        font-size: 2.5rem;
+        color: white;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    }
+
+    /* Media Grid styles */
+    .media-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .media-tile {
+        aspect-ratio: 1;
+        background: #f8f9fa;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: transform 0.2s;
+        border: 1px solid #e0f2f1;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .media-tile:hover {
+        transform: scale(1.05);
+    }
+
+    .media-tile img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .media-tile i {
+        font-size: 2rem;
+        color: var(--primary-color);
+    }
+
+    .media-tile-title {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 0.5rem;
+        font-size: 0.875rem;
+        text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* Modal styles */
+    .modal-content {
+        background-color: #2a2a2a;
+        color: #fff;
+    }
+
+    .modal-header {
+        border-bottom: 1px solid #444;
+    }
+
+    .modal-footer {
+        border-top: 1px solid #444;
+    }
+
+    .btn-close {
+        filter: invert(1) grayscale(100%) brightness(200%);
+    }
+
+    .modal .form-control {
+        background-color: #333;
+        border: 1px solid #444;
+        color: #fff;
+    }
+
+    .modal .form-control:focus {
+        background-color: #333;
+        border-color: var(--primary-color);
+        color: #fff;
+        box-shadow: none;
+    }
+
+    .modal .form-label {
+        color: #fff;
+    }
+
+    /* Table styles */
+    .table {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .table thead {
+        background-color: var(--light-bg);
+    }
+
+    .table thead th {
+        color: var(--text-color);
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+        border: none;
+        padding: 1rem;
+    }
+
+    .table tbody tr {
+        border-bottom: 1px solid #e0f2f1;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f5f9f9;
+    }
+
+    .table td {
+        padding: 1rem;
+        color: #2c3e50;
+        vertical-align: middle;
+    }
+
+    .btn-teal {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+    }
+
+    .btn-teal:hover {
+        background-color: var(--secondary-color);
+        color: white;
+    }
+
+    .media-preview {
+        width: 120px;
+        height: 68px;
+        object-fit: cover;
+        border-radius: 4px;
+        background-color: #000;
+    }
+
+    .upload-preview {
+        max-width: 100%;
+        max-height: 200px;
+        margin-top: 1rem;
+        border-radius: 5px;
+    }
+
+    .upload-preview img,
+    .upload-preview video {
+        width: 100%;
+        border-radius: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Button Header -->
+    <div class="kiosk-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <div class="kiosk-icon">
+                    <i class="fas fa-photo-video"></i>
+                </div>
+                <div>
+                    <h1 class="mb-1">{{ button.title }}</h1>
+                    <p class="mb-0">Manage Media</p>
+                </div>
+            </div>
+            <a href="{{ url_for('kiosks.manage_buttons', video_id=button.video_id) }}" class="btn btn-outline-light">
+                <i class="fas fa-arrow-left"></i> Back to Buttons
+            </a>
+        </div>
+    </div>
+
+    <!-- Media Table -->
+    <div class="card">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="card-title mb-0">Media Items</h5>
+                <button class="btn btn-teal" id="addMediaBtn">
+                    <i class="fas fa-upload"></i> Upload Media
+                </button>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table" id="mediaTable">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Table content will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Preview Modal -->
+<div class="modal fade" id="previewModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="previewModalLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="previewModalContent" class="media-grid">
+                    <!-- Media tiles will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Media</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+                    <input type="hidden" id="originalTitle">
+                    <div class="mb-3">
+                        <label for="newTitle" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="newTitle" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="newDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="newDescription" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="saveEdit">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const mediaItems = {{ media_items | tojson | safe }};
+    
+    // Group media items by title
+    function groupMediaByTitle(items) {
+        const grouped = {};
+        items.forEach(media => {
+            if (grouped[media.title]) {
+                // Check if this file_path already exists in the group
+                const isDuplicate = grouped[media.title].items.some(item => item.file_path === media.file_path);
+                if (!isDuplicate) {
+                    grouped[media.title].items.push(media);
+                }
+            } else {
+                grouped[media.title] = {
+                    items: [media]
+                };
+            }
+        });
+        return grouped;
+    }
+    
+    // Populate table with grouped media
+    function populateTable() {
+        const tbody = document.querySelector('#mediaTable tbody');
+        const groupedMedia = groupMediaByTitle(mediaItems);
+        
+        tbody.innerHTML = '';
+        Object.entries(groupedMedia).forEach(([title, data]) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="fw-medium">${title}</td>
+                <td class="text-end">
+                    <button class="btn btn-sm btn-info me-2" onclick="previewMedia('${title}')">
+                        <i class="fas fa-eye"></i> View All
+                    </button>
+                    <button class="btn btn-sm btn-teal me-2" onclick="editMedia('${title}')">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteMedia('${title}')">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+
+        if (Object.keys(groupedMedia).length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="2" class="text-center py-4">
+                        <div class="alert alert-info mb-0">
+                            No media items found. Upload your first media using the button above.
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }
+    }
+    
+    // Preview media items
+    function previewMedia(title) {
+        const groupedMedia = groupMediaByTitle(mediaItems);
+        const mediaData = groupedMedia[title];
+        if (!mediaData) return;
+        
+        console.log('Previewing media items:', mediaData.items);  // Debug log
+        
+        const previewHtml = mediaData.items.map(item => {
+            let tileContent = '';
+            if (item.type === 'image') {
+                tileContent = `<img src="${item.file_path}" alt="${item.title}">`;
+            } else if (item.type === 'video') {
+                tileContent = `<i class="fas fa-video"></i>`;
+            } else {
+                tileContent = `<i class="fas fa-file"></i>`;
+            }
+            
+            return `
+                <a href="${item.file_path}" target="_blank" class="media-tile">
+                    ${tileContent}
+                    <div class="media-tile-title">${item.title}</div>
+                </a>
+            `;
+        }).join('');
+        
+        document.querySelector('#previewModalLabel').textContent = title;
+        document.querySelector('#previewModalContent').innerHTML = previewHtml;
+        
+        const modal = new bootstrap.Modal(document.getElementById('previewModal'));
+        modal.show();
+    }
+    
+    // Edit media items
+    function editMedia(title) {
+        document.getElementById('originalTitle').value = title;
+        document.getElementById('newTitle').value = title;
+        
+        const modal = new bootstrap.Modal(document.getElementById('editModal'));
+        modal.show();
+    }
+    
+    // Delete media items
+    async function deleteMedia(title) {
+        if (!confirm(`Are you sure you want to delete all media items with title "${title}"? This cannot be undone.`)) {
+            return;
+        }
+
+        const groupedMedia = groupMediaByTitle(mediaItems);
+        const mediaData = groupedMedia[title];
+        if (!mediaData) return;
+
+        try {
+            // Delete each media item with the given title
+            const deletePromises = mediaData.items.map(item => 
+                fetch(`/api/button-media/${item.id}`, {
+                    method: 'DELETE'
+                })
+            );
+
+            const results = await Promise.all(deletePromises);
+            const allSuccessful = results.every(response => response.ok);
+
+            if (allSuccessful) {
+                // Create and show success alert
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-success alert-dismissible fade show';
+                alertDiv.setAttribute('role', 'alert');
+                alertDiv.innerHTML = `
+                    <strong>Success!</strong> Media items deleted successfully.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                `;
+                
+                // Insert alert at the top of the card body
+                const cardBody = document.querySelector('.card-body');
+                cardBody.insertBefore(alertDiv, cardBody.firstChild);
+                
+                // Auto dismiss after 5 seconds
+                setTimeout(() => {
+                    const bsAlert = new bootstrap.Alert(alertDiv);
+                    bsAlert.close();
+                }, 5000);
+
+                // Refresh the page to update the table
+                location.reload();
+            } else {
+                alert('Failed to delete some media items');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while deleting the media items');
+        }
+    }
+    
+    // Create upload media modal
+    const createUploadMediaModal = (buttonId) => {
+        const modal = document.createElement('div');
+        modal.className = 'modal fade';
+        modal.setAttribute('id', 'uploadMediaModal');
+        modal.setAttribute('tabindex', '-1');
+        modal.setAttribute('aria-hidden', 'true');
+        modal.innerHTML = `
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Upload New Media</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="uploadMediaForm" enctype="multipart/form-data">
+                            <input type="hidden" name="button_id" value="${buttonId}">
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Title</label>
+                                <input type="text" class="form-control" id="title" name="title" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="file" class="form-label">Select Files</label>
+                                <input type="file" class="form-control" id="file" name="files[]" multiple required>
+                            </div>
+                            
+                            <div id="selectedFiles" class="mt-3">
+                                <!-- Selected files will be displayed here -->
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="cancelUploadMedia">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="saveNewMedia">Upload</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        return modal;
+    };
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', () => {
+        populateTable();
+        
+        // Handle Upload Media button click
+        let uploadMediaModal = null;
+        document.getElementById('addMediaBtn').addEventListener('click', function() {
+            if (uploadMediaModal) {
+                uploadMediaModal.remove();
+            }
+            uploadMediaModal = createUploadMediaModal({{ button.id }});
+            const modalInstance = new bootstrap.Modal(uploadMediaModal);
+            modalInstance.show();
+
+            // Set up file preview
+            const fileInput = document.getElementById('file');
+            const selectedFiles = document.getElementById('selectedFiles');
+
+            fileInput.addEventListener('change', function() {
+                selectedFiles.innerHTML = '';
+                const files = Array.from(this.files);
+                
+                if (files.length === 0) return;
+
+                const fileList = document.createElement('ul');
+                fileList.className = 'list-group';
+                
+                files.forEach(file => {
+                    const item = document.createElement('li');
+                    item.className = 'list-group-item d-flex justify-content-between align-items-center bg-dark text-white border-secondary';
+                    
+                    let icon = 'file';
+                    if (file.type.startsWith('image/')) icon = 'image';
+                    else if (file.type.startsWith('video/')) icon = 'video';
+                    else if (file.type === 'application/pdf') icon = 'file-pdf';
+                    
+                    item.innerHTML = `
+                        <div>
+                            <i class="fas fa-${icon} me-2"></i>
+                            ${file.name}
+                        </div>
+                        <span class="badge bg-secondary">${(file.size / 1024 / 1024).toFixed(2)} MB</span>
+                    `;
+                    fileList.appendChild(item);
+                });
+                
+                selectedFiles.appendChild(fileList);
+            });
+
+            // Handle save
+            document.getElementById('saveNewMedia').addEventListener('click', async function() {
+                const form = document.getElementById('uploadMediaForm');
+                const formData = new FormData(form);
+                
+                // Add all selected files
+                const files = form.querySelector('#file').files;
+                for (let i = 0; i < files.length; i++) {
+                    formData.append('files[]', files[i]);
+                }
+
+                // Show loading state
+                const saveButton = this;
+                const originalText = saveButton.innerHTML;
+                saveButton.disabled = true;
+                saveButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+
+                try {
+                    const response = await fetch('/api/button-media/batch', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        // Create and show success alert
+                        const alertDiv = document.createElement('div');
+                        alertDiv.className = 'alert alert-success alert-dismissible fade show';
+                        alertDiv.setAttribute('role', 'alert');
+                        alertDiv.innerHTML = `
+                            <strong>Success!</strong> Media uploaded successfully.
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        `;
+                        
+                        // Insert alert at the top of the card body
+                        const cardBody = document.querySelector('.card-body');
+                        cardBody.insertBefore(alertDiv, cardBody.firstChild);
+                        
+                        // Auto dismiss after 5 seconds
+                        setTimeout(() => {
+                            const bsAlert = new bootstrap.Alert(alertDiv);
+                            bsAlert.close();
+                        }, 5000);
+                        
+                        // Close modal and refresh table
+                        modalInstance.hide();
+                        setTimeout(() => {
+                            location.reload();
+                        }, 500);
+                    } else {
+                        const data = await response.json();
+                        alert(data.error || 'Failed to upload media');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('An error occurred while uploading the media');
+                } finally {
+                    saveButton.disabled = false;
+                    saveButton.innerHTML = originalText;
+                }
+            });
+
+            // Handle cancel button
+            document.getElementById('cancelUploadMedia').addEventListener('click', function() {
+                modalInstance.hide();
+                uploadMediaModal.remove();
+                uploadMediaModal = null;
+            });
+
+            // Handle close button (X)
+            const closeBtn = uploadMediaModal.querySelector('.btn-close');
+            closeBtn.addEventListener('click', function() {
+                modalInstance.hide();
+                uploadMediaModal.remove();
+                uploadMediaModal = null;
+            });
+
+            // Handle modal hidden event
+            uploadMediaModal.addEventListener('hidden.bs.modal', function() {
+                uploadMediaModal.remove();
+                uploadMediaModal = null;
+            });
+        });
+
+        // Handle edit save
+        document.getElementById('saveEdit').addEventListener('click', async () => {
+            const originalTitle = document.getElementById('originalTitle').value;
+            const newTitle = document.getElementById('newTitle').value;
+            
+            try {
+                const response = await fetch('/api/button-media/update-title', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        original_title: originalTitle,
+                        new_title: newTitle
+                    })
+                });
+                
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    const data = await response.json();
+                    alert(data.error || 'Failed to update media');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while updating the media');
+            }
+        });
+    });
+</script>
+{% endblock %} 

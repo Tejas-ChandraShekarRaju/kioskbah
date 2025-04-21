@@ -1,0 +1,246 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid pt-4">
+    <!-- Section Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="results-header-card">
+                <div class="d-flex align-items-start">
+                    <div class="section-icon" style="margin-right: 2rem;">
+                        <i class="{{ section.icon }} fa-3x text-teal"></i>
+                    </div>
+                    <div>
+                        <h2 class="mb-2 text-white mt-2 section-name">{{ section.name }}</h2>
+                        <p class="mb-0 text-muted fs-5">{{ section.description }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Subsections Grid -->
+    <div class="row">
+        {% if not subsections %}
+        <div class="col-12 text-center py-5">
+            <div class="alert alert-info bg-transparent border border-info">
+                <h4 class="alert-heading"><i class="fa-solid fa-info-circle me-2"></i>No Subsections</h4>
+                <p>There are no subsections available for this section yet.</p>
+            </div>
+        </div>
+        {% endif %}
+
+        {% for subsection in subsections %}
+        <div class="col-md-4 mb-4 animate-card" style="animation-delay: {{ loop.index0 * 0.1 }}s">
+            <div class="card h-100 bg-dark border-0 shadow-sm option-tab">
+                <a class="card-body p-4 d-flex flex-column" href="{{ url_for('sections.view_subsection', id=subsection.id) }}">
+                    <h4 class="card-title text-teal mb-3">{{ subsection.name }}</h4>
+                    <p class="card-text text-muted mb-4">{{ subsection.description }}</p>
+
+                    <!-- Media Type Badges -->
+                    <div class="d-flex gap-2 mb-4">
+                        {% if subsection.media_counts.image > 0 %}
+                        <span class="media-badge animate-badge">
+                            <i class="fa-solid fa-image me-1"></i> {{ subsection.media_counts.image }}
+                        </span>
+                        {% endif %}
+                        {% if subsection.media_counts.video > 0 %}
+                        <span class="media-badge animate-badge">
+                            <i class="fa-solid fa-video me-1"></i> {{ subsection.media_counts.video }}
+                        </span>
+                        {% endif %}
+                        {% if subsection.media_counts.pdf > 0 %}
+                        <span class="media-badge animate-badge">
+                            <i class="fa-solid fa-file-pdf me-1"></i> {{ subsection.media_counts.pdf }}
+                        </span>
+                        {% endif %}
+                    </div>
+
+                   
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Back Button -->
+<div class="back-button-fixed-container">
+    <a class="back-button-fixed" href="{{ url_for('check_floor_plan_and_elevation', view_floor_plans=True) }}" title="Back to Home">
+        <i class="fa-solid fa-arrow-left"></i>
+    </a>
+</div>
+
+<style>
+    /* Card styling from main page */
+    .card {
+        transition: transform 0.2s ease-in-out, box-shadow 0.1s ease-in-out;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+        height: 100%;
+        text-decoration: none !important;
+    }
+
+    .card-body {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        text-decoration: none !important;
+    }
+
+    .results-header-card {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+        padding: 2.5rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .badge {
+        font-size: 0.9rem;
+        padding: 0.5em 0.8em;
+        border-radius: 6px;
+        transition: filter 0.15s ease-in-out, transform 0.15s ease-in-out; /* Faster transition, added transform */
+    }
+
+    /* Remove animation from base .media-badge */
+    .media-badge {
+        color: rgb(126, 126, 126);
+        /* animation: fadeInSlideUp 0.5s ease-out forwards delay(1.5s); REMOVED */
+    }
+
+    .media-badge:hover {
+        filter: brightness(1.3); /* Brighter */
+        transform: scale(1.05); /* Slight scale */
+    }
+
+    /* Add base animation properties for badges */
+    .animate-badge {
+        opacity: 0; /* Start hidden */
+        animation-name: fadeInSlideUp; /* Use the same keyframes */
+        animation-duration: 0.3s; /* Make badge animation slightly faster */
+        animation-timing-function: ease-out;
+        animation-fill-mode: forwards;
+        /* animation-delay is set inline */
+    }
+
+    /* Back button styling */    
+    .back-button-fixed {
+        position: fixed;
+        top: 5rem;
+        right: 2rem;
+        background: var(--teal);
+        width: 3rem;
+        height: 3rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55), box-shadow 0.3s ease;
+        color: white;
+        text-decoration: none;
+        /* Added bounce timing and shadow transition */
+        z-index: 1000;
+    }
+
+    .back-button-fixed:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 10px rgba(0, 169, 165, 0.4);
+    }
+
+    .back-button-fixed a {
+        color: white;
+        text-decoration: none;
+    }
+
+    /* Button styling */
+    .btn-outline-teal {
+        border: 2px solid var(--teal);
+        color: var(--teal);
+        font-weight: 500;
+        padding: 0.75rem 1.5rem;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .btn-outline-teal:hover {
+        background: var(--teal);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 169, 165, 0.3);
+    }
+
+    /* Text styling */
+    .text-teal {
+        color: var(--teal) !important;
+    }
+
+    .text-muted {
+        color: #a0a0a0 !important;
+    }
+
+    /* Icon styling */
+    .fa-3x {
+        font-size: 3em;
+    }
+
+    /* Section icon styling */
+    .section-icon {
+        background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+        width: 80px;
+        height: 80px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        border: 2px solid rgba(0, 169, 165, 0.2);
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .section-icon:hover {
+        transform: rotate(5deg) scale(1.05);
+    }
+
+    .section-icon i {
+        filter: drop-shadow(0 2px 4px rgba(0, 169, 165, 0.3));
+        transition: filter 0.3s ease-in-out;
+    }
+
+    .section-icon:hover i {
+        filter: drop-shadow(0 4px 8px rgba(0, 169, 165, 0.5));
+    }
+
+    /* Card entrance animation */
+    @keyframes fadeInSlideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-card {
+        animation: fadeInSlideUp 0.5s ease-out forwards;
+        opacity: 0;
+    }
+    .option-tab.card:hover {
+        transform: translateY(-8px); /* Increased lift */
+        box-shadow: 0 10px 20px rgba(0, 169, 165, 0.25); /* Stronger shadow */
+    }
+
+    /* Add transition for card title */
+    .card-title {
+        animation: fadeInSlideUp .5s ease-out forwards ;
+    }
+
+    /* Add slide-up effect on card hover */
+    .option-tab.card .card-title:hover {
+        transform: translateY(-4px); /* Slide title up slightly */
+        text-decoration: none !important;
+    }
+
+</style>
+{% endblock %}

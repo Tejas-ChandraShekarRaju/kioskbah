@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<style>
+    /* Theme colors */
+    :root {
+        --teal: #00796b;
+        --teal-light: #48a999;
+        --teal-lighter: #e0f2f1;
+        --teal-dark: #004c40;
+    }
+
+    /* Table styles */
+    .table {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .table thead {
+        background-color: var(--teal-lighter);
+    }
+
+    .table thead th {
+        color: var(--teal-dark);
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+        border: none;
+        padding: 1rem;
+    }
+
+    .table tbody tr {
+        border-bottom: 1px solid #e0f2f1;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f5f9f9;
+    }
+
+    .table td {
+        padding: 1rem;
+        color: #2c3e50;
+        vertical-align: middle;
+    }
+
+    /* Button styles */
+    .btn-teal {
+        background-color: var(--teal);
+        border-color: var(--teal);
+        color: white;
+    }
+
+    .btn-teal:hover {
+        background-color: var(--teal-dark);
+        border-color: var(--teal-dark);
+        color: white;
+    }
+
+    .btn-group .btn {
+        margin: 0 2px;
+    }
+
+    /* Media count badge */
+    .badge-teal {
+        background-color: var(--teal);
+        color: white;
+        padding: 0.5em 0.8em;
+        border-radius: 6px;
+        font-weight: 500;
+    }
+
+    /* Section icon */
+    .section-icon {
+        width: 40px;
+        height: 40px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, var(--teal-lighter), white);
+        border-radius: 8px;
+        margin-right: 10px;
+        color: var(--teal);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Section Management -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title mb-4">Manage Sections</h4>
+
+                    <div class="table-responsive mt-4">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Section Name</th>
+                                    <th class="text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for section in sections %}
+                                <tr>
+                                    <td class="fw-medium">
+                                        <div class="d-flex align-items-center">
+                                            <div class="section-icon">
+                                                <i class="{{ section.icon }}"></i>
+                                            </div>
+                                            {{ section.name }}
+                                        </div>
+                                    </td>
+                                    
+                                    <td class="text-end">
+                                        <a href="{{ url_for('sections.manage_subsections', section_id=section.id) }}"
+                                            class="btn btn-sm btn-teal">
+                                            <i class="fas fa-plus"></i> Add Subsection
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function () {
+        // Initialize Select2
+        $('.select2').select2({
+            theme: "default",
+            width: '100%'
+        });
+    });
+</script>
+{% endblock %}
